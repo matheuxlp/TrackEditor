@@ -1,0 +1,411 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		39F17DE92B07E046008D149C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F17DE82B07E046008D149C /* main.cpp */; };
+		39F183A22B07E635008D149C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39F183A12B07E634008D149C /* OpenGL.framework */; };
+		39F183A82B07E695008D149C /* resources in CopyFiles */ = {isa = PBXBuildFile; fileRef = 39F183A72B07E695008D149C /* resources */; };
+		39F183AA2B07EB71008D149C /* libGLEW.2.2.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 39F183A92B07EB71008D149C /* libGLEW.2.2.0.dylib */; };
+		39F183AD2B07EB7B008D149C /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 39F183AC2B07EB7B008D149C /* libglfw.3.3.dylib */; };
+		39F183AE2B07EB7B008D149C /* libglfw.3.3.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 39F183AC2B07EB7B008D149C /* libglfw.3.3.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		39F183B02B07EB84008D149C /* libsoil2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 39F183AF2B07EB84008D149C /* libsoil2.dylib */; };
+		39F183B12B07EB84008D149C /* libsoil2.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 39F183AF2B07EB84008D149C /* libsoil2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		39F183B52B07F256008D149C /* Editor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F183B32B07F256008D149C /* Editor.cpp */; };
+		39F183B82B07F74C008D149C /* libGLEW.2.2.0.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 39F183A92B07EB71008D149C /* libGLEW.2.2.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		39F183D22B12173B008D149C /* Bezier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F183CC2B12173B008D149C /* Bezier.cpp */; };
+		39F183D32B12173B008D149C /* Curve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F183CE2B12173B008D149C /* Curve.cpp */; };
+		39F183D42B12173B008D149C /* Hermite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F183CF2B12173B008D149C /* Hermite.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		39F17DE32B07E046008D149C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				39F183A82B07E695008D149C /* resources in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		39F183A62B07E65E008D149C /* Embed Libraries */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				39F183B12B07EB84008D149C /* libsoil2.dylib in Embed Libraries */,
+				39F183B82B07F74C008D149C /* libGLEW.2.2.0.dylib in Embed Libraries */,
+				39F183AE2B07EB7B008D149C /* libglfw.3.3.dylib in Embed Libraries */,
+			);
+			name = "Embed Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		39F17DE52B07E046008D149C /* TrackEditor */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TrackEditor; sourceTree = BUILT_PRODUCTS_DIR; };
+		39F17DE82B07E046008D149C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		39F183A12B07E634008D149C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		39F183A72B07E695008D149C /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
+		39F183A92B07EB71008D149C /* libGLEW.2.2.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.2.0.dylib; path = resources/import/glew/2.2.0_1/lib/libGLEW.2.2.0.dylib; sourceTree = "<group>"; };
+		39F183AC2B07EB7B008D149C /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = resources/import/glfw/3.3.8/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
+		39F183AF2B07EB84008D149C /* libsoil2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsoil2.dylib; path = resources/import/soil2/lib/libsoil2.dylib; sourceTree = "<group>"; };
+		39F183B32B07F256008D149C /* Editor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Editor.cpp; sourceTree = "<group>"; };
+		39F183B42B07F256008D149C /* Editor.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = Editor.h; sourceTree = "<group>"; };
+		39F183C32B111850008D149C /* Shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
+		39F183CB2B116F19008D149C /* Point.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Point.h; sourceTree = "<group>"; };
+		39F183CC2B12173B008D149C /* Bezier.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bezier.cpp; sourceTree = "<group>"; };
+		39F183CD2B12173B008D149C /* Hermite.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Hermite.hpp; sourceTree = "<group>"; };
+		39F183CE2B12173B008D149C /* Curve.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Curve.cpp; sourceTree = "<group>"; };
+		39F183CF2B12173B008D149C /* Hermite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hermite.cpp; sourceTree = "<group>"; };
+		39F183D02B12173B008D149C /* Curve.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Curve.hpp; sourceTree = "<group>"; };
+		39F183D12B12173B008D149C /* Bezier.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Bezier.hpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		39F17DE22B07E046008D149C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39F183B02B07EB84008D149C /* libsoil2.dylib in Frameworks */,
+				39F183AD2B07EB7B008D149C /* libglfw.3.3.dylib in Frameworks */,
+				39F183A22B07E635008D149C /* OpenGL.framework in Frameworks */,
+				39F183AA2B07EB71008D149C /* libGLEW.2.2.0.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		39F17DDC2B07E046008D149C = {
+			isa = PBXGroup;
+			children = (
+				39F183A72B07E695008D149C /* resources */,
+				39F17DE72B07E046008D149C /* TrackEditor */,
+				39F17DE62B07E046008D149C /* Products */,
+				39F1839C2B07E2AD008D149C /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		39F17DE62B07E046008D149C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				39F17DE52B07E046008D149C /* TrackEditor */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39F17DE72B07E046008D149C /* TrackEditor */ = {
+			isa = PBXGroup;
+			children = (
+				39F183CA2B111A96008D149C /* Headers */,
+				39F183B62B07F310008D149C /* Curves */,
+				39F183B22B07F244008D149C /* Editor */,
+				39F17DE82B07E046008D149C /* main.cpp */,
+			);
+			path = TrackEditor;
+			sourceTree = "<group>";
+		};
+		39F1839C2B07E2AD008D149C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				39F183AF2B07EB84008D149C /* libsoil2.dylib */,
+				39F183AC2B07EB7B008D149C /* libglfw.3.3.dylib */,
+				39F183A92B07EB71008D149C /* libGLEW.2.2.0.dylib */,
+				39F183A12B07E634008D149C /* OpenGL.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		39F183B22B07F244008D149C /* Editor */ = {
+			isa = PBXGroup;
+			children = (
+				39F183B32B07F256008D149C /* Editor.cpp */,
+				39F183B42B07F256008D149C /* Editor.h */,
+			);
+			path = Editor;
+			sourceTree = "<group>";
+		};
+		39F183B62B07F310008D149C /* Curves */ = {
+			isa = PBXGroup;
+			children = (
+				39F183CC2B12173B008D149C /* Bezier.cpp */,
+				39F183D12B12173B008D149C /* Bezier.hpp */,
+				39F183CE2B12173B008D149C /* Curve.cpp */,
+				39F183D02B12173B008D149C /* Curve.hpp */,
+				39F183CF2B12173B008D149C /* Hermite.cpp */,
+				39F183CD2B12173B008D149C /* Hermite.hpp */,
+			);
+			path = Curves;
+			sourceTree = "<group>";
+		};
+		39F183CA2B111A96008D149C /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				39F183C32B111850008D149C /* Shader.h */,
+				39F183CB2B116F19008D149C /* Point.h */,
+			);
+			path = Headers;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		39F17DE42B07E046008D149C /* TrackEditor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 39F17DEC2B07E046008D149C /* Build configuration list for PBXNativeTarget "TrackEditor" */;
+			buildPhases = (
+				39F17DE12B07E046008D149C /* Sources */,
+				39F17DE22B07E046008D149C /* Frameworks */,
+				39F183A62B07E65E008D149C /* Embed Libraries */,
+				39F17DE32B07E046008D149C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TrackEditor;
+			productName = TrackEditor;
+			productReference = 39F17DE52B07E046008D149C /* TrackEditor */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		39F17DDD2B07E046008D149C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					39F17DE42B07E046008D149C = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
+				};
+			};
+			buildConfigurationList = 39F17DE02B07E046008D149C /* Build configuration list for PBXProject "TrackEditor" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 39F17DDC2B07E046008D149C;
+			productRefGroup = 39F17DE62B07E046008D149C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				39F17DE42B07E046008D149C /* TrackEditor */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		39F17DE12B07E046008D149C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39F183D22B12173B008D149C /* Bezier.cpp in Sources */,
+				39F183D42B12173B008D149C /* Hermite.cpp in Sources */,
+				39F183B52B07F256008D149C /* Editor.cpp in Sources */,
+				39F17DE92B07E046008D149C /* main.cpp in Sources */,
+				39F183D32B12173B008D149C /* Curve.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		39F17DEA2B07E046008D149C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/resources/import/glew/2.2.0_1/include/GL",
+					"$(PROJECT_DIR)/resources/import/glfw/3.3.8/include/GLFW",
+					"$(PROJECT_DIR)/resources/import/soil2/include",
+					"$(PROJECT_DIR)/resources/import/glm/0.9.9.8/include/glm",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/resources/import/glew/2.2.0_1/lib",
+					"$(PROJECT_DIR)/resources/import/glfw/3.3.8/lib",
+					"$(PROJECT_DIR)/resources/import/soil2/lib",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		39F17DEB2B07E046008D149C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/resources/import/glew/2.2.0_1/include/GL",
+					"$(PROJECT_DIR)/resources/import/glfw/3.3.8/include/GLFW",
+					"$(PROJECT_DIR)/resources/import/soil2/include",
+					"$(PROJECT_DIR)/resources/import/glm/0.9.9.8/include/glm",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/resources/import/glew/2.2.0_1/lib",
+					"$(PROJECT_DIR)/resources/import/glfw/3.3.8/lib",
+					"$(PROJECT_DIR)/resources/import/soil2/lib",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		39F17DED2B07E046008D149C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 83T7W4QPG8;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		39F17DEE2B07E046008D149C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 83T7W4QPG8;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		39F17DE02B07E046008D149C /* Build configuration list for PBXProject "TrackEditor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39F17DEA2B07E046008D149C /* Debug */,
+				39F17DEB2B07E046008D149C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		39F17DEC2B07E046008D149C /* Build configuration list for PBXNativeTarget "TrackEditor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39F17DED2B07E046008D149C /* Debug */,
+				39F17DEE2B07E046008D149C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 39F17DDD2B07E046008D149C /* Project object */;
+}
