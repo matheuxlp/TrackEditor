@@ -23,7 +23,10 @@
 
 #include "Shader.h"
 #include "Curve.hpp"
+#include "Bezier.hpp"
+#include "Hermite.hpp"
 #include "Point.h"
+
 
 class Editor {
 private:
@@ -52,11 +55,17 @@ private:
     // Track
     bool leftMouseButtonPressed;
     bool aKeyPressed;
+    bool bKeyPressed;
 
     GLuint VAO;
     GLuint VBO;
 
     std::vector<glm::vec3> clickPoints;
+
+    Hermite hermiteCurve;
+    Bezier bezierCurve;
+
+    GLuint generateControlPointsBuffer(vector <glm::vec3> controlPoints);
 
 //Private functions
     void initGLFW();
@@ -89,6 +98,7 @@ public:
     void render();
 
     void drawPoints();
+    void drawLines();
 
 //Static functions
     static void framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH);

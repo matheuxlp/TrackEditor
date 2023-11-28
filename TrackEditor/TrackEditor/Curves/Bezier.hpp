@@ -11,10 +11,11 @@
 #include "Curve.hpp"
 
 class Bezier :
-    public Curve {
+public Curve {
 public:
     Bezier();
     void generateCurve(int pointsPerSegment);
+    void printData();
 };
 
 #endif /* Bezier_hpp */

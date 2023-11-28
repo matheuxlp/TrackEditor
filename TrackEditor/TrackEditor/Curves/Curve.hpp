@@ -31,6 +31,14 @@ public:
     void drawCurve(glm::vec4 color);
     int getNbCurvePoints() { return curvePoints.size(); }
     glm::vec3 getPointOnCurve(int i) { return curvePoints[i]; }
+
+    bool hasCurvePoint() {
+        if (this->curvePoints.size() != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 protected:
     vector <glm::vec3> controlPoints;
     vector <glm::vec3> curvePoints;

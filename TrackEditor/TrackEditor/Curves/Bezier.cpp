@@ -15,6 +15,24 @@ Bezier::Bezier() {
     );
 }
 
+void Bezier::printData() {
+    // Print the first element
+    if (!this->curvePoints.empty()) {
+        std::cout << "First element: (" << this->curvePoints[0].x << ", " << this->curvePoints[0].y << ", " << this->curvePoints[0].z << ")" << std::endl;
+    } else {
+        std::cout << "Vector is empty." << std::endl;
+    }
+
+    // Print the last element
+    if (!this->curvePoints.empty()) {
+        std::cout << "Last element: (" << this->curvePoints[this->curvePoints.size() - 1].x << ", " << this->curvePoints[this->curvePoints.size() - 1].y << ", " << this->curvePoints[this->curvePoints.size() - 1].z << ")" << std::endl;
+    } else {
+        std::cout << "Vector is empty." << std::endl;
+    }
+    std::cout << "Size" << this->curvePoints.size() << std::endl;
+
+}
+
 void Bezier::generateCurve(int pointsPerSegment) {
     float step = 1.0 / (float)pointsPerSegment;
 
@@ -22,7 +40,7 @@ void Bezier::generateCurve(int pointsPerSegment) {
 
     int nControlPoints = controlPoints.size();
 
-    for (int i = 0; i < nControlPoints - 3; i += 3) {
+    for (int i = 0; i < nControlPoints - 4; i += 3) {
 
         for (float t = 0.0; t <= 1.0; t += step) {
             glm::vec3 p;
@@ -45,31 +63,26 @@ void Bezier::generateCurve(int pointsPerSegment) {
     //Gera o VAO
     GLuint VBO;
 
-    //Gera��o do identificador do VBO
     glGenBuffers(1, &VBO);
 
-    //Faz a conex�o (vincula) do buffer como um buffer de array
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    //Envia os dados do array de floats para o buffer da OpenGl
     glBufferData(GL_ARRAY_BUFFER, curvePoints.size() * sizeof(GLfloat) * 3, curvePoints.data(), GL_STATIC_DRAW);
 
-    //Gera��o do identificador do VAO (Vertex Array Object)
     glGenVertexArrays(1, &VAO);
 
-    // Vincula (bind) o VAO primeiro, e em seguida  conecta e seta o(s) buffer(s) de v�rtices
-    // e os ponteiros para os atributos
     glBindVertexArray(VAO);
 
-    //Atributo posi��o (x, y, z)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glVertexAttribPointer(0,
+                          3,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          3 * sizeof(GLfloat),
+                          (GLvoid*)0);
     glEnableVertexAttribArray(0);
 
-    // Observe que isso � permitido, a chamada para glVertexAttribPointer registrou o VBO como o objeto de buffer de v�rtice
-    // atualmente vinculado - para que depois possamos desvincular com seguran�a
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    // Desvincula o VAO (� uma boa pr�tica desvincular qualquer buffer ou array para evitar bugs medonhos)
     glBindVertexArray(0);
 }
 
