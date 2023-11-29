@@ -75,6 +75,34 @@ void Editor::updateProjectionMatrix() {
     }
 }
 
+void Editor::initCross() {
+    GLfloat crossVertices[] = {
+        // Horizontal line
+        0, (float)WINDOW_HEIGHT / 2, 0.0f,   // Endpoint 1
+        (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT / 2, 0.0f,    // Endpoint 2
+
+        // Vertical line
+        (float)WINDOW_WIDTH / 2, 0, 0.0f,   // Endpoint 1
+        (float)WINDOW_WIDTH / 2, (float)WINDOW_HEIGHT, 0.0f     // Endpoint 2
+    };
+
+    glGenVertexArrays(1, &crossVAO);
+    glGenBuffers(1, &crossVBO);
+
+    glBindVertexArray(crossVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, crossVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(crossVertices), crossVertices, GL_STATIC_DRAW);
+
+    // Position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+}
+
 //Constructors / Destructors
 Editor::Editor() {
     this->window = nullptr;
@@ -91,6 +119,7 @@ Editor::Editor() {
     this->initGLEW();
     this->initOpenGLOptions();
     this->initShaders();
+    this->initCross();
 }
 
 Editor::~Editor() {
@@ -116,6 +145,7 @@ void Editor::updateMouseInput() {
     if (leftMouseButtonState == GLFW_PRESS && !leftMouseButtonPressed) {
 
         // this->clickPoints.push_back(glm::vec3(lastMouseX, lastMouseY, 0.f));
+        std::cout << "Position: (" << mouseX << ", " << mouseY << ")"<< "\n";
         this->points.push_back(new Point(mouseX, mouseY, 0.f));
 
         leftMouseButtonPressed = true;
@@ -164,6 +194,8 @@ void Editor::render() {
     glLineWidth(5);
     glPointSize(10);
 
+    this->renderCross();
+
     for (auto&point : this->points) {
         point->drawPoint(this->shaders[0]);
     }
@@ -177,3 +209,13 @@ void Editor::render() {
 void Editor::framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH) {
     glViewport(0, 0, fbW, fbH);
 };
+
+void Editor::renderCross() {
+    this->updateProjectionMatrix();
+
+    glUseProgram(shaders[0]->getID());
+
+    glBindVertexArray(crossVAO);
+    glDrawArrays(GL_LINES, 0, 4);
+    glBindVertexArray(0);
+}

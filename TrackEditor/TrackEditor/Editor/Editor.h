@@ -56,6 +56,8 @@ private:
     Hermite hermiteCurve;
     Bezier bezierCurve;
 
+    GLuint crossVAO, crossVBO;
+
     // ----- //
 
     void initGLFW();
@@ -64,7 +66,8 @@ private:
     void initOpenGLOptions();
     void initShaders();
     void updateProjectionMatrix();
-
+    void initCross();
+    void renderCross();
 public:
     Editor();
     virtual ~Editor();
