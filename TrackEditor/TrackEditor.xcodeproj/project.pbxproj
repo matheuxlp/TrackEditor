@@ -49,6 +49,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		39ABDE432B17AC2100F76DED /* LineDrawer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LineDrawer.h; sourceTree = "<group>"; };
 		39F17DE52B07E046008D149C /* TrackEditor */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TrackEditor; sourceTree = BUILT_PRODUCTS_DIR; };
 		39F17DE82B07E046008D149C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		39F183A12B07E634008D149C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -150,6 +151,7 @@
 			children = (
 				39F183C32B111850008D149C /* Shader.h */,
 				39F183CB2B116F19008D149C /* Point.h */,
+				39ABDE432B17AC2100F76DED /* LineDrawer.h */,
 			);
 			path = Headers;
 			sourceTree = "<group>";

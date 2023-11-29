@@ -22,7 +22,7 @@ void Hermite::generateCurve(int pointsPerSegment) {
     float t = 0;
 
     int nControlPoints = controlPoints.size();
-    std::cout << "nControlPoints: (" << nControlPoints << ")" << std::endl;
+
     for (int i = 0; i < nControlPoints - 3; i += 3) {
 
         for (float t = 0.0; t <= 1.0; t += step) {

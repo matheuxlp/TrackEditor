@@ -26,6 +26,7 @@
 #include "Bezier.hpp"
 #include "Hermite.hpp"
 #include "Point.h"
+#include "LineDrawer.h"
 
 
 class Editor {
@@ -38,71 +39,47 @@ private:
     int framebufferWidth;
     int framebufferHeight;
 
-    std::vector<Shader*> shaders;
-
-    float dt;
-    float curTime;
-    float lastTime;
-
-    double lastMouseX;
-    double lastMouseY;
     double mouseX;
     double mouseY;
-    double mouseOffsetX;
-    double mouseOffsetY;
-    bool firstMouse;
-
+    
     // Track
+    std::vector<Shader*> shaders;
+
     bool leftMouseButtonPressed;
     bool aKeyPressed;
     bool bKeyPressed;
 
-    GLuint VAO;
-    GLuint VBO;
+    LineDrawer lineDrawer;
 
-    std::vector<glm::vec3> clickPoints;
+    std::vector<Point*> points;
 
     Hermite hermiteCurve;
     Bezier bezierCurve;
 
-    GLuint generateControlPointsBuffer(vector <glm::vec3> controlPoints);
+    // ----- //
 
-//Private functions
     void initGLFW();
     void initWindow();
-    void initGLEW(); //AFTER CONTEXT CREATION!!!
+    void initGLEW();
     void initOpenGLOptions();
     void initShaders();
-    void initVAO();
     void updateProjectionMatrix();
 
-//Static variables
-
 public:
-//Constructors / Destructors
     Editor();
     virtual ~Editor();
 
-//Accessors
     int getWindowShouldClose();
 
-//Modifiers
     void setWindowShouldClose();
 
-//Functions
-    void updateDt();
     void updateMouseInput();
     void updateKeyboardInput();
-    void updateInput();
     void update();
     void render();
-
-    void drawPoints();
-    void drawLines();
 
 //Static functions
     static void framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH);
 };
-
 
 #endif /* Editor_h */

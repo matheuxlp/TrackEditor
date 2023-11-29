@@ -40,7 +40,7 @@ void Bezier::generateCurve(int pointsPerSegment) {
 
     int nControlPoints = controlPoints.size();
 
-    for (int i = 0; i < nControlPoints - 4; i += 3) {
+    for (int i = 0; i < nControlPoints - 3; i += 3) {
 
         for (float t = 0.0; t <= 1.0; t += step) {
             glm::vec3 p;
