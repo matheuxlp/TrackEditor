@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "Shader.h"
+#include "Point.h"
 
 #include <OpenGL/OpenGL.h>
 
@@ -25,12 +26,31 @@ using namespace std;
 class Curve {
 public:
     Curve() {}
-    inline void setControlPoints(vector <glm::vec3> controlPoints) { this->controlPoints = controlPoints; }
-    void setShader(Shader* shader);
+    void setControlPoints(vector<Point> controlPoints) {
+        this->controlPoints = controlPoints;
+        for (auto&point : this->controlPoints) {
+            point.printPosition();
+        }
+    }
+    
+    void addControlPoint(Point controlPoint) {
+        this->controlPoints.push_back(controlPoint);
+    }
+
+    void clearControlPoints() {
+        this->controlPoints.clear();
+    }
+
     void generateCurve(int pointsPerSegment);
-    void drawCurve(glm::vec4 color);
-    int getNbCurvePoints() { return curvePoints.size(); }
-    glm::vec3 getPointOnCurve(int i) { return curvePoints[i]; }
+    void drawCurve(Shader* shader, glm::vec4 color);
+
+    int getNbCurvePoints() {
+        return static_cast<int>(curvePoints.size());
+    }
+
+    glm::vec3 getPointOnCurve(int i) {
+        return curvePoints[i];
+    }
 
     bool hasCurvePoint() {
         if (this->curvePoints.size() != 0) {
@@ -40,7 +60,7 @@ public:
         }
     }
 protected:
-    vector <glm::vec3> controlPoints;
+    vector <Point> controlPoints;
     vector <glm::vec3> curvePoints;
     glm::mat4 M; //Matriz de base
     GLuint VAO;

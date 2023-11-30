@@ -14,11 +14,11 @@
 
 class LineDrawer {
 public:
-    static void drawLines(Shader* program, const std::vector<Point*>& points) {
+    static void drawLines(Shader* program, const std::vector<Point>& points) {
         // Convert Point pointers to glm::vec3
         std::vector<glm::vec3> positions;
         for (const auto& point : points) {
-            positions.push_back(point->getPosition());
+            positions.push_back(point.getPosition());
         }
 
         glUseProgram(program->getID());

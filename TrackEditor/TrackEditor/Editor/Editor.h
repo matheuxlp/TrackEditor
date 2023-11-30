@@ -46,12 +46,11 @@ private:
     std::vector<Shader*> shaders;
 
     bool leftMouseButtonPressed;
-    bool aKeyPressed;
-    bool bKeyPressed;
+
 
     LineDrawer lineDrawer;
 
-    std::vector<Point*> points;
+    std::vector<Point> points;
 
     Hermite hermiteCurve;
     Bezier bezierCurve;
@@ -68,6 +67,12 @@ private:
     void updateProjectionMatrix();
     void initCross();
     void renderCross();
+
+    // Keyboard Update
+    bool key1Pressed;
+    bool key2Pressed;
+    bool key3Pressed;
+
 public:
     Editor();
     virtual ~Editor();

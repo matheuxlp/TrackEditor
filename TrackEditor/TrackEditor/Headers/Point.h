@@ -25,6 +25,10 @@ public:
 
     ~Point() {}
 
+    void printPosition() {
+        std::cout << "Point(" << this->position.x <<  ", " << this->position.y << ")"<< "\n";
+    }
+
     glm::vec3 getPosition() const {
         return this->position;
     }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		39ABDE462B17F7E900F76DED /* BSpline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39ABDE442B17F7E900F76DED /* BSpline.cpp */; };
 		39F17DE92B07E046008D149C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39F17DE82B07E046008D149C /* main.cpp */; };
 		39F183A22B07E635008D149C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39F183A12B07E634008D149C /* OpenGL.framework */; };
 		39F183A82B07E695008D149C /* resources in CopyFiles */ = {isa = PBXBuildFile; fileRef = 39F183A72B07E695008D149C /* resources */; };
@@ -50,6 +51,8 @@
 
 /* Begin PBXFileReference section */
 		39ABDE432B17AC2100F76DED /* LineDrawer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LineDrawer.h; sourceTree = "<group>"; };
+		39ABDE442B17F7E900F76DED /* BSpline.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BSpline.cpp; sourceTree = "<group>"; };
+		39ABDE452B17F7E900F76DED /* BSpline.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BSpline.hpp; sourceTree = "<group>"; };
 		39F17DE52B07E046008D149C /* TrackEditor */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TrackEditor; sourceTree = BUILT_PRODUCTS_DIR; };
 		39F17DE82B07E046008D149C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		39F183A12B07E634008D149C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -142,6 +145,8 @@
 				39F183D02B12173B008D149C /* Curve.hpp */,
 				39F183CF2B12173B008D149C /* Hermite.cpp */,
 				39F183CD2B12173B008D149C /* Hermite.hpp */,
+				39ABDE442B17F7E900F76DED /* BSpline.cpp */,
+				39ABDE452B17F7E900F76DED /* BSpline.hpp */,
 			);
 			path = Curves;
 			sourceTree = "<group>";
@@ -215,6 +220,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				39F183D22B12173B008D149C /* Bezier.cpp in Sources */,
+				39ABDE462B17F7E900F76DED /* BSpline.cpp in Sources */,
 				39F183D42B12173B008D149C /* Hermite.cpp in Sources */,
 				39F183B52B07F256008D149C /* Editor.cpp in Sources */,
 				39F17DE92B07E046008D149C /* main.cpp in Sources */,

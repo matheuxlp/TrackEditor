@@ -103,6 +103,7 @@ void Editor::initCross() {
     glBindVertexArray(0);
 }
 
+
 //Constructors / Destructors
 Editor::Editor() {
     this->window = nullptr;
@@ -145,8 +146,8 @@ void Editor::updateMouseInput() {
     if (leftMouseButtonState == GLFW_PRESS && !leftMouseButtonPressed) {
 
         // this->clickPoints.push_back(glm::vec3(lastMouseX, lastMouseY, 0.f));
-        std::cout << "Position: (" << mouseX << ", " << mouseY << ")"<< "\n";
-        this->points.push_back(new Point(mouseX, mouseY, 0.f));
+        // std::cout << "Position: (" << mouseX << ", " << mouseY << ")"<< "\n";
+        this->points.push_back(Point(mouseX, mouseY, 0.f));
 
         leftMouseButtonPressed = true;
     } else if (leftMouseButtonState == GLFW_RELEASE) {
@@ -159,25 +160,29 @@ void Editor::updateKeyboardInput() {
         glfwSetWindowShouldClose(this->window, GLFW_TRUE);
     }
 
-    int aKeyState = glfwGetKey(this->window, GLFW_KEY_A);
-    int bKeyState = glfwGetKey(this->window, GLFW_KEY_B);
-
-    if (aKeyState == GLFW_PRESS && !aKeyPressed) {
-        this->bezierCurve.printData();
-        this->bezierCurve.setShader(this->shaders[0]);
+    if (glfwGetKey(this->window, GLFW_KEY_1) == GLFW_PRESS && !key1Pressed) {
+        this->bezierCurve.setControlPoints(this->points);
         this->bezierCurve.generateCurve(10);
-        aKeyPressed = true;
-    } else if (aKeyState == GLFW_RELEASE) {
-        aKeyPressed = false;
+        key1Pressed = true;
+    } else if (glfwGetKey(this->window, GLFW_KEY_1) == GLFW_RELEASE) {
+        key1Pressed = false;
     }
 
-    if (bKeyState == GLFW_PRESS && !bKeyPressed) {
-        this->bezierCurve.printData();
-        bKeyPressed = true;
-    } else if (bKeyState == GLFW_RELEASE) {
-        bKeyPressed = false;
+    if (glfwGetKey(this->window, GLFW_KEY_2) == GLFW_PRESS && !key2Pressed) {
+        std::cout << "[Hermite Pressed]\n";
+        key2Pressed = true;
+    } else if (glfwGetKey(this->window, GLFW_KEY_2) == GLFW_RELEASE) {
+        key2Pressed = false;
+    }
+
+    if (glfwGetKey(this->window, GLFW_KEY_3) == GLFW_PRESS && !key3Pressed) {
+        std::cout << "[Hermite Pressed]\n";
+        key3Pressed = true;
+    } else if (glfwGetKey(this->window, GLFW_KEY_3) == GLFW_RELEASE) {
+        key3Pressed = false;
     }
 }
+
 
 void Editor::update() {
     glfwPollEvents();
@@ -197,8 +202,10 @@ void Editor::render() {
     this->renderCross();
 
     for (auto&point : this->points) {
-        point->drawPoint(this->shaders[0]);
+        point.drawPoint(this->shaders[0]);
     }
+
+    this->bezierCurve.drawCurve(this->shaders[0], glm::vec4(0, 1, 0, 1));
 
     this->lineDrawer.drawLines(this->shaders[0], this->points);
 

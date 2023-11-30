@@ -7,13 +7,9 @@
 
 #include "Curve.hpp"
 
-void Curve::setShader(Shader* shader) {
-    this->shader = shader;
-    shader->use();
-}
-
-void Curve::drawCurve(glm::vec4 color) {
+void Curve::drawCurve(Shader* shader, glm::vec4 color) {
     glm::fvec4 colorVec4(color.r, color.g, color.b, color.a);
+    shader->use();
     //shader->setVec4f(colorVec4, "finalColor");
 
     glBindVertexArray(VAO);
