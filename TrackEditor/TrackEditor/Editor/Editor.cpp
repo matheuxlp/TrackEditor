@@ -147,7 +147,7 @@ void Editor::updateMouseInput() {
 
         // this->clickPoints.push_back(glm::vec3(lastMouseX, lastMouseY, 0.f));
         // std::cout << "Position: (" << mouseX << ", " << mouseY << ")"<< "\n";
-        this->points.push_back(Point(mouseX, mouseY, 0.f));
+        this->guidePoints.push_back(Point(mouseX, mouseY, 0.f));
 
         leftMouseButtonPressed = true;
     } else if (leftMouseButtonState == GLFW_RELEASE) {
@@ -159,15 +159,16 @@ void Editor::updateKeyboardInput() {
     if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(this->window, GLFW_TRUE);
     }
-
+    /// 1 - BEZIER CURVE
     if (glfwGetKey(this->window, GLFW_KEY_1) == GLFW_PRESS && !key1Pressed) {
-        this->bezierCurve.setControlPoints(this->points);
+        this->bezierCurve.setControlPoints(this->guidePoints);
         this->bezierCurve.generateCurve(10);
         key1Pressed = true;
     } else if (glfwGetKey(this->window, GLFW_KEY_1) == GLFW_RELEASE) {
         key1Pressed = false;
     }
 
+    /// 2 - HERMITE CURVE
     if (glfwGetKey(this->window, GLFW_KEY_2) == GLFW_PRESS && !key2Pressed) {
         std::cout << "[Hermite Pressed]\n";
         key2Pressed = true;
@@ -175,11 +176,33 @@ void Editor::updateKeyboardInput() {
         key2Pressed = false;
     }
 
+    /// 3 - B-SPLINE CURVE
     if (glfwGetKey(this->window, GLFW_KEY_3) == GLFW_PRESS && !key3Pressed) {
-        std::cout << "[Hermite Pressed]\n";
+        this->bSplineCurve.setControlPoints(this->guidePoints);
+        this->bSplineCurve.generateCurve(10);
         key3Pressed = true;
     } else if (glfwGetKey(this->window, GLFW_KEY_3) == GLFW_RELEASE) {
         key3Pressed = false;
+    }
+
+    /// 9 - CLEAR GUIDE POINTS
+    if (glfwGetKey(this->window, GLFW_KEY_9) == GLFW_PRESS && !key9Pressed) {
+        std::cout << "Clear guide points and line\n";
+        this->guidePoints.clear();
+        key9Pressed = true;
+    } else if (glfwGetKey(this->window, GLFW_KEY_9) == GLFW_RELEASE) {
+        key9Pressed = false;
+    }
+
+    /// 0 - CLEAR CURVES
+    if (glfwGetKey(this->window, GLFW_KEY_0) == GLFW_PRESS && !key0Pressed) {
+        std::cout << "Clear Curves\n";
+        this->bezierCurve.clear();
+        this->hermiteCurve.clear();
+        this->bSplineCurve.clear();
+        key0Pressed = true;
+    } else if (glfwGetKey(this->window, GLFW_KEY_0) == GLFW_RELEASE) {
+        key0Pressed = false;
     }
 }
 
@@ -201,13 +224,14 @@ void Editor::render() {
 
     this->renderCross();
 
-    for (auto&point : this->points) {
+    for (auto&point : this->guidePoints) {
         point.drawPoint(this->shaders[0]);
     }
 
-    this->bezierCurve.drawCurve(this->shaders[0], glm::vec4(0, 1, 0, 1));
+    // this->bezierCurve.drawCurve(this->shaders[0], glm::vec4(0, 1, 0, 1));
+    this->bSplineCurve.drawCurve(this->shaders[0], glm::vec4(0, 1, 0, 1));
 
-    this->lineDrawer.drawLines(this->shaders[0], this->points);
+    this->lineDrawer.drawLines(this->shaders[0], this->guidePoints);
 
     glfwSwapBuffers(window);
 }

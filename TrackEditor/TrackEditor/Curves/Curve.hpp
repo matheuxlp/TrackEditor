@@ -41,6 +41,15 @@ public:
         this->controlPoints.clear();
     }
 
+    void clearCurvePoints() {
+        this->curvePoints.clear();
+    }
+
+    void clear() {
+        this->clearControlPoints();
+        this->clearCurvePoints();
+    }
+
     void generateCurve(int pointsPerSegment);
     void drawCurve(Shader* shader, glm::vec4 color);
 

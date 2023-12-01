@@ -25,6 +25,7 @@
 #include "Curve.hpp"
 #include "Bezier.hpp"
 #include "Hermite.hpp"
+#include "BSpline.hpp"
 #include "Point.h"
 #include "LineDrawer.h"
 
@@ -45,17 +46,25 @@ private:
     // Track
     std::vector<Shader*> shaders;
 
+    // Guide
+    GLuint crossVAO, crossVBO;
+    LineDrawer lineDrawer;
+    std::vector<Point> guidePoints;
+
+    // Keyboard and mouse Update
     bool leftMouseButtonPressed;
 
+    bool key1Pressed;
+    bool key2Pressed;
+    bool key3Pressed;
+    bool key9Pressed;
+    bool key0Pressed;
 
-    LineDrawer lineDrawer;
-
-    std::vector<Point> points;
-
+    // Curves
     Hermite hermiteCurve;
     Bezier bezierCurve;
+    BSpline bSplineCurve;
 
-    GLuint crossVAO, crossVBO;
 
     // ----- //
 
@@ -67,11 +76,6 @@ private:
     void updateProjectionMatrix();
     void initCross();
     void renderCross();
-
-    // Keyboard Update
-    bool key1Pressed;
-    bool key2Pressed;
-    bool key3Pressed;
 
 public:
     Editor();

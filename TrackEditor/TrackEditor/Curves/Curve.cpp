@@ -13,7 +13,7 @@ void Curve::drawCurve(Shader* shader, glm::vec4 color) {
     //shader->setVec4f(colorVec4, "finalColor");
 
     glBindVertexArray(VAO);
-    glDrawArrays(GL_LINE_STRIP, 0, curvePoints.size());
+    glDrawArrays(GL_LINE_LOOP, 0, curvePoints.size());
     glBindVertexArray(0);
 }
 

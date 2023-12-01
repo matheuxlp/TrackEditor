@@ -15,7 +15,6 @@ public Curve {
 public:
     BSpline();
     void generateCurve(int pointsPerSegment);
-    void printData();
 };
 
 #endif /* BSpline_hpp */

@@ -15,48 +15,44 @@ Bezier::Bezier() {
     );
 }
 
-void Bezier::printData() {
-    // Print the first element
-    if (!this->curvePoints.empty()) {
-        std::cout << "First element: (" << this->curvePoints[0].x << ", " << this->curvePoints[0].y << ", " << this->curvePoints[0].z << ")" << std::endl;
-    } else {
-        std::cout << "Vector is empty." << std::endl;
-    }
-
-    // Print the last element
-    if (!this->curvePoints.empty()) {
-        std::cout << "Last element: (" << this->curvePoints[this->curvePoints.size() - 1].x << ", " << this->curvePoints[this->curvePoints.size() - 1].y << ", " << this->curvePoints[this->curvePoints.size() - 1].z << ")" << std::endl;
-    } else {
-        std::cout << "Vector is empty." << std::endl;
-    }
-    std::cout << "Size" << this->curvePoints.size() << std::endl;
-
-}
-
 void Bezier::generateCurve(int pointsPerSegment) {
-    float step = 1.0 / (float)pointsPerSegment;
-
-    float t = 0;
+    float step = 1.0 / static_cast<float>(pointsPerSegment);
 
     int nControlPoints = controlPoints.size();
 
+    // Check if there are at least 4 control points
+    if (nControlPoints < 4) {
+        // Handle the case when there are not enough control points
+        // You can add error handling, logging, or return early as needed.
+        std::cerr << "Minus then 4 points" << std::endl;
+        return;
+    }
+
+    float x, y, z;
+
+    // Iterate over the control points
     for (int i = 0; i < nControlPoints - 3; i += 3) {
+        float t = 0.0;
 
-        for (float t = 0.0; t <= 1.0; t += step) {
-            glm::vec3 p;
+        while (t <= 1.0) {
+            x = ((-1 * pow(t, 3) + 3 * pow(t, 2) - 3 * t + 1) * controlPoints[i].getPosition().x +
+                 (3 * pow(t, 3) - 6 * pow(t, 2) + 3 * t) * controlPoints[i + 1].getPosition().x +
+                 (-3 * pow(t, 3) + 3 * pow(t, 2)) * controlPoints[i + 2].getPosition().x +
+                 pow(t, 3) * controlPoints[i + 3].getPosition().x);
 
-            glm::vec4 T(t * t * t, t * t, t, 1);
+            y = ((-1 * pow(t, 3) + 3 * pow(t, 2) - 3 * t + 1) * controlPoints[i].getPosition().y +
+                 (3 * pow(t, 3) - 6 * pow(t, 2) + 3 * t) * controlPoints[i + 1].getPosition().y +
+                 (-3 * pow(t, 3) + 3 * pow(t, 2)) * controlPoints[i + 2].getPosition().y +
+                 pow(t, 3) * controlPoints[i + 3].getPosition().y);
 
-            glm::vec3 P0 = controlPoints[i].getPosition();
-            glm::vec3 P1 = controlPoints[i + 1].getPosition();
-            glm::vec3 P2 = controlPoints[i + 2].getPosition();
-            glm::vec3 P3 = controlPoints[i + 3].getPosition();
+            z = ((-1 * pow(t, 3) + 3 * pow(t, 2) - 3 * t + 1) * controlPoints[i].getPosition().z +
+                 (3 * pow(t, 3) - 6 * pow(t, 2) + 3 * t) * controlPoints[i + 1].getPosition().z +
+                 (-3 * pow(t, 3) + 3 * pow(t, 2)) * controlPoints[i + 2].getPosition().z +
+                 pow(t, 3) * controlPoints[i + 3].getPosition().z);
 
-            glm::mat4x3 G(P0, P1, P2, P3);
+            curvePoints.push_back(glm::vec3(x, y, z));
 
-            p = G * M * T;  //---------
-
-            curvePoints.push_back(p);
+            t += step;
         }
     }
 
