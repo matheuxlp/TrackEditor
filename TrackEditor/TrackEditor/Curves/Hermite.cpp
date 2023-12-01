@@ -7,38 +7,41 @@
 
 #include "Hermite.hpp"
 
-Hermite::Hermite() {
-    M = glm::mat4(2, -2, 1, 1,
-                  -3, 3, -2, -1,
-                  0, 0, 1, 0,
-                  1, 0, 0, 0
-    );
-}
+Hermite::Hermite() {}
 
 void Hermite::generateCurve(int pointsPerSegment) {
     if (controlPoints.size() != 4) {
-        std::cout << "Less then 4 pointsn";
+        std::cerr << "Less than 4 points" << std::endl;
         // Only execute the generateCurve if there are exactly four control points
         return;
     }
 
-    float step = 1.0 / (float)pointsPerSegment;
+    float inc = 1.0 / static_cast<float>(pointsPerSegment);
 
-    for (float t = 0.0; t <= 1.0; t += step) {
-        glm::vec3 p;
+    float WG = 0.5; // Fator atenuação das tangentes T1 e T2
 
-        glm::vec4 T(t * t * t, t * t, t, 1);
+    glm::vec3 P1 = controlPoints[0].getPosition();
+    glm::vec3 P4 = controlPoints[3].getPosition();
+    glm::vec3 R1 = WG * (controlPoints[1].getPosition() - P1);
+    glm::vec3 R4 = WG * (controlPoints[2].getPosition() - P4);
 
-        glm::vec3 P0 = controlPoints[0].getPosition();
-        glm::vec3 P1 = controlPoints[3].getPosition();
-        glm::vec3 T0 = controlPoints[1].getPosition() - P0;
-        glm::vec3 T1 = controlPoints[2].getPosition() - P1;
+    for (float t = 0.0; t <= 1.0; t += inc) {
+        float x = ((2 * pow(t, 3) - 3 * pow(t, 2) + 0 * t + 1) * P1.x +
+                   (-2 * pow(t, 3) + 3 * pow(t, 2) + 0 * t + 0) * P4.x +
+                   (1 * pow(t, 3) - 2 * pow(t, 2) + 1 * t + 0) * R1.x +
+                   (1 * pow(t, 3) - 1 * pow(t, 2) + 0 * t + 0) * R4.x);
 
-        glm::mat4x3 G(P0, P1, T0, T1);
+        float y = ((2 * pow(t, 3) - 3 * pow(t, 2) + 0 * t + 1) * P1.y +
+                   (-2 * pow(t, 3) + 3 * pow(t, 2) + 0 * t + 0) * P4.y +
+                   (1 * pow(t, 3) - 2 * pow(t, 2) + 1 * t + 0) * R1.y +
+                   (1 * pow(t, 3) - 1 * pow(t, 2) + 0 * t + 0) * R4.y);
 
-        p = G * M * T;  //---------
+        float z = ((2 * pow(t, 3) - 3 * pow(t, 2) + 0 * t + 1) * P1.z +
+                   (-2 * pow(t, 3) + 3 * pow(t, 2) + 0 * t + 0) * P4.z +
+                   (1 * pow(t, 3) - 2 * pow(t, 2) + 1 * t + 0) * R1.z +
+                   (1 * pow(t, 3) - 1 * pow(t, 2) + 0 * t + 0) * R4.z);
 
-        curvePoints.push_back(p);
+        curvePoints.push_back(glm::vec3(x, y, z));
     }
 
     // OpenGL Setup
@@ -56,3 +59,4 @@ void Hermite::generateCurve(int pointsPerSegment) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
+

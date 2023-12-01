@@ -7,13 +7,7 @@
 
 #include "Bezier.hpp"
 
-Bezier::Bezier() {
-    M = glm::mat4(-1, 3, -3, 1,
-        3, -6, 3, 0,
-        -3, 3, 0, 0,
-        1, 0, 0, 0
-    );
-}
+Bezier::Bezier() {}
 
 void Bezier::generateCurve(int pointsPerSegment) {
     float step = 1.0 / static_cast<float>(pointsPerSegment);

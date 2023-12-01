@@ -7,13 +7,7 @@
 
 #include "BSpline.hpp"
 
-BSpline::BSpline() {
-    M = glm::mat4(-1, 3, -3, 1,
-        3, -6, 3, 0,
-        -3, 3, 0, 0,
-        1, 0, 0, 0
-    );
-}
+BSpline::BSpline() {}
 
 void BSpline::generateCurve(int pointsPerSegment) {
     float inc = 1.0 / static_cast<float>(pointsPerSegment);
