@@ -83,6 +83,7 @@ private:
     void renderCross();
     vector<glm::vec3> calculateSecondVector(const std::vector<glm::vec3>& points, float M, bool isInternal);
     void writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>& externalVertices, const string& filename);
+    vector<glm::vec3> invertVector(const vector<glm::vec3>& points);
 
 public:
     Editor();

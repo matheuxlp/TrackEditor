@@ -251,8 +251,8 @@ void Editor::updateKeyboardInput() {
     /// 9 - Generate OBJ
     if (glfwGetKey(this->window, GLFW_KEY_8) == GLFW_PRESS && !key8Pressed) {
         std::cout << "Generta\n";
-        vector<glm::vec3> externalCurvePoints = this->externalBSplineCurve.getCurvePoints();
-        vector<glm::vec3> internalCurvePoints = this->internalBSplineCurve.getCurvePoints();
+        vector<glm::vec3> externalCurvePoints = this->invertVector(this->externalBSplineCurve.getCurvePoints());
+        vector<glm::vec3> internalCurvePoints = this->invertVector(this->internalBSplineCurve.getCurvePoints());
         // Change the path name
         string pathName = "/Users/matheuxlp/Documents/College/2023-2/ComputacaoGrafica/GB/TrabalhoGB/Editor/TrackEditor/TrackEditor/resources/output/output.obj";
         this->writeObjFile(externalCurvePoints, internalCurvePoints, pathName);
@@ -397,4 +397,14 @@ void Editor::writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>
 
         objFile.close();
     }
+}
+
+vector<glm::vec3> Editor::invertVector(const vector<glm::vec3>& points) {
+    vector<glm::vec3> newVector;
+
+    for (auto&point : points) {
+        newVector.push_back(glm::vec3(point.x, point.z, point.y));
+    }
+
+    return newVector;
 }
