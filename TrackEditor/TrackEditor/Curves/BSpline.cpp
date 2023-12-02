@@ -60,3 +60,39 @@ void BSpline::generateCurve(int pointsPerSegment) {
 
     glBindVertexArray(0);
 }
+
+void BSpline::generateCurveWithPoints(vector<glm::vec3> curvePoints) {
+
+    if (curvePoints.empty()) {
+        std::cout << "Vector is empty." << std::endl;
+        return;
+    } else {
+        std::cout << "Here" << std::endl;
+        this->curvePoints = curvePoints;
+
+        //Gera o VAO
+        GLuint VBO;
+
+        glGenBuffers(1, &VBO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+        glBufferData(GL_ARRAY_BUFFER, curvePoints.size() * sizeof(GLfloat) * 3, curvePoints.data(), GL_STATIC_DRAW);
+
+        glGenVertexArrays(1, &VAO);
+
+        glBindVertexArray(VAO);
+
+        glVertexAttribPointer(0,
+                              3,
+                              GL_FLOAT,
+                              GL_FALSE,
+                              3 * sizeof(GLfloat),
+                              (GLvoid*)0);
+        glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        glBindVertexArray(0);
+    }
+}

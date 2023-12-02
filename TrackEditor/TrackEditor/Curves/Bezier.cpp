@@ -14,10 +14,7 @@ void Bezier::generateCurve(int pointsPerSegment) {
 
     int nControlPoints = controlPoints.size();
 
-    // Check if there are at least 4 control points
     if (nControlPoints < 4) {
-        // Handle the case when there are not enough control points
-        // You can add error handling, logging, or return early as needed.
         std::cerr << "Minus then 4 points" << std::endl;
         return;
     }
@@ -63,12 +60,7 @@ void Bezier::generateCurve(int pointsPerSegment) {
 
     glBindVertexArray(VAO);
 
-    glVertexAttribPointer(0,
-                          3,
-                          GL_FLOAT,
-                          GL_FALSE,
-                          3 * sizeof(GLfloat),
-                          (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);

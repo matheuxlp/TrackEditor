@@ -138,6 +138,31 @@ void Editor::setWindowShouldClose() {
     glfwSetWindowShouldClose(this->window, GLFW_TRUE);
 }
 
+vector<glm::vec3> Editor::calculateSecondVector(const std::vector<glm::vec3>& points, float M) {
+    std::vector<glm::vec3> secondVector;
+
+    for (size_t i = 0; i < points.size() - 1; ++i) {
+        float W = points[i + 1].x - points[i].x;
+        float H = points[i + 1].y - points[i].y;
+        float teta = std::atan(H/W);
+
+        float alpha;
+        if (W > 0) {
+            alpha = teta + (90.0 * M_PI / 180.0);
+        } else {
+            alpha = teta - (90.0 * M_PI / 180.0);
+        }
+
+        float Cx = std::cos(alpha) * M + points[i].x;
+        float Cy = std::sin(alpha) * M + points[i].y;
+
+        glm::vec3 pointC(Cx, Cy, points[i].z);
+        secondVector.push_back(pointC);
+    }
+
+    return secondVector;
+}
+
 void Editor::updateMouseInput() {
     glfwGetCursorPos(this->window, &this->mouseX, &this->mouseY);
 
@@ -185,6 +210,16 @@ void Editor::updateKeyboardInput() {
         key3Pressed = false;
     }
 
+    /// 4 - INTERNAL B-SPLINE CURVE
+    if (glfwGetKey(this->window, GLFW_KEY_4) == GLFW_PRESS && !key4Pressed) {
+        vector<glm::vec3> middleCurvePoints = this->bSplineCurve.getCurvePoints();
+        vector<glm::vec3> internalCurvePoints = this->calculateSecondVector(middleCurvePoints, 10);
+        this->internalBSplineCurve.generateCurveWithPoints(internalCurvePoints);
+        key4Pressed = true;
+    } else if (glfwGetKey(this->window, GLFW_KEY_4) == GLFW_RELEASE) {
+        key4Pressed = false;
+    }
+
     /// 9 - CLEAR GUIDE POINTS
     if (glfwGetKey(this->window, GLFW_KEY_9) == GLFW_PRESS && !key9Pressed) {
         std::cout << "Clear guide points and line\n";
@@ -230,6 +265,7 @@ void Editor::render() {
 
     // this->bezierCurve.drawCurve(this->shaders[0], glm::vec4(0, 1, 0, 1));
     this->bSplineCurve.drawCurve(this->shaders[0], glm::vec4(0, 1, 0, 1));
+    this->internalBSplineCurve.drawCurve(this->shaders[0], glm::vec4(0, 1, 0, 1));
 
     this->lineDrawer.drawLines(this->shaders[0], this->guidePoints);
 

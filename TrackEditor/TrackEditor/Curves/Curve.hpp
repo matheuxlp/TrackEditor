@@ -50,23 +50,19 @@ public:
         this->clearCurvePoints();
     }
 
+    vector<glm::vec3> getCurvePoints() {
+        return this->curvePoints;
+    }
+
+    void setCurvePoints(vector<glm::vec3> curvePoints) {
+        this->curvePoints = curvePoints;
+    }
+
     void generateCurve(int pointsPerSegment);
     void drawCurve(Shader* shader, glm::vec4 color);
 
     int getNbCurvePoints() {
         return static_cast<int>(curvePoints.size());
-    }
-
-    glm::vec3 getPointOnCurve(int i) {
-        return curvePoints[i];
-    }
-
-    bool hasCurvePoint() {
-        if (this->curvePoints.size() != 0) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     void printData() {
@@ -87,8 +83,8 @@ public:
 
     }
 protected:
-    vector <Point> controlPoints;
-    vector <glm::vec3> curvePoints;
+    vector<Point> controlPoints;
+    vector<glm::vec3> curvePoints;
     GLuint VAO;
 };
 

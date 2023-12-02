@@ -12,7 +12,6 @@ Hermite::Hermite() {}
 void Hermite::generateCurve(int pointsPerSegment) {
     if (controlPoints.size() != 4) {
         std::cerr << "Less than 4 points" << std::endl;
-        // Only execute the generateCurve if there are exactly four control points
         return;
     }
 

@@ -57,6 +57,7 @@ private:
     bool key1Pressed;
     bool key2Pressed;
     bool key3Pressed;
+    bool key4Pressed;
     bool key9Pressed;
     bool key0Pressed;
 
@@ -64,6 +65,7 @@ private:
     Hermite hermiteCurve;
     Bezier bezierCurve;
     BSpline bSplineCurve;
+    BSpline internalBSplineCurve;
 
 
     // ----- //
@@ -76,6 +78,7 @@ private:
     void updateProjectionMatrix();
     void initCross();
     void renderCross();
+    vector<glm::vec3> calculateSecondVector(const std::vector<glm::vec3>& points, float M);
 
 public:
     Editor();
