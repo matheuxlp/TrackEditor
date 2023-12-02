@@ -58,6 +58,7 @@ private:
     bool key2Pressed;
     bool key3Pressed;
     bool key4Pressed;
+    bool key5Pressed;
     bool key9Pressed;
     bool key0Pressed;
 
@@ -66,6 +67,7 @@ private:
     Bezier bezierCurve;
     BSpline bSplineCurve;
     BSpline internalBSplineCurve;
+    BSpline externalBSplineCurve;
 
 
     // ----- //

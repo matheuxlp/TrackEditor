@@ -238,6 +238,16 @@ void Editor::updateKeyboardInput() {
         key4Pressed = false;
     }
 
+    /// 5 - EXTERNAL B-SPLINE CURVE
+    if (glfwGetKey(this->window, GLFW_KEY_5) == GLFW_PRESS && !key5Pressed) {
+        vector<glm::vec3> middleCurvePoints = this->bSplineCurve.getCurvePoints();
+        vector<glm::vec3> externalCurvePoints = this->calculateSecondVector(middleCurvePoints, 10, false);
+        this->externalBSplineCurve.generateCurveWithPoints(externalCurvePoints);
+        key5Pressed = true;
+    } else if (glfwGetKey(this->window, GLFW_KEY_5) == GLFW_RELEASE) {
+        key5Pressed = false;
+    }
+
     /// 9 - CLEAR GUIDE POINTS
     if (glfwGetKey(this->window, GLFW_KEY_9) == GLFW_PRESS && !key9Pressed) {
         std::cout << "Clear guide points and line\n";
@@ -284,6 +294,7 @@ void Editor::render() {
     // this->bezierCurve.drawCurve(this->shaders[0], glm::vec4(0, 1, 0, 1));
     this->bSplineCurve.drawCurve(this->shaders[BASE_B_SPLINE], glm::vec4(0, 1, 0, 1));
     this->internalBSplineCurve.drawCurve(this->shaders[INTERNAL_B_SPLINE], glm::vec4(0, 1, 0, 1));
+    this->externalBSplineCurve.drawCurve(this->shaders[EXTERNAL_B_SPLINE], glm::vec4(0, 1, 0, 1));
 
     this->lineDrawer.drawLines(this->shaders[BASE], this->guidePoints);
 
