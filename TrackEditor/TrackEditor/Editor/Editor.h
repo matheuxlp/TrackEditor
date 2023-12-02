@@ -78,7 +78,7 @@ private:
     void updateProjectionMatrix();
     void initCross();
     void renderCross();
-    vector<glm::vec3> calculateSecondVector(const std::vector<glm::vec3>& points, float M);
+    vector<glm::vec3> calculateSecondVector(const std::vector<glm::vec3>& points, float M, bool isInternal);
 
 public:
     Editor();
@@ -95,6 +95,13 @@ public:
 
 //Static functions
     static void framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH);
+};
+
+enum ShaderType {
+    BASE = 0,
+    BASE_B_SPLINE = 1,
+    INTERNAL_B_SPLINE = 2,
+    EXTERNAL_B_SPLINE = 3
 };
 
 #endif /* Editor_h */

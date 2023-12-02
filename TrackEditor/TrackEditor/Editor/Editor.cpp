@@ -59,8 +59,17 @@ void Editor::initOpenGLOptions() {
 }
 
 void Editor::initShaders() {
-    std::cerr << "Here init shaders" << std::endl;
-    this->shaders.push_back(new Shader("resources/shaders/vertexShader.glsl", "resources/shaders/fragmentShader.glsl"));
+    // Base Shaders (White)
+    this->shaders.push_back(new Shader("resources/shaders/baseVS.glsl", "resources/shaders/baseFS.glsl"));
+
+    // B-Spline Shaders (Blue)
+    this->shaders.push_back(new Shader("resources/shaders/baseVS.glsl", "resources/shaders/baseBSplineFS.glsl"));
+
+    // Internal B-Spline Shaders (Red)
+    this->shaders.push_back(new Shader("resources/shaders/baseVS.glsl", "resources/shaders/internalBSplineFS.glsl"));
+
+    // External B-Spline Shaders (Green)
+    this->shaders.push_back(new Shader("resources/shaders/baseVS.glsl", "resources/shaders/externalBSplineFS.glsl"));
 }
 
 void Editor::updateProjectionMatrix() {
@@ -138,7 +147,7 @@ void Editor::setWindowShouldClose() {
     glfwSetWindowShouldClose(this->window, GLFW_TRUE);
 }
 
-vector<glm::vec3> Editor::calculateSecondVector(const std::vector<glm::vec3>& points, float M) {
+vector<glm::vec3> Editor::calculateSecondVector(const std::vector<glm::vec3>& points, float M, bool isInternal) {
     std::vector<glm::vec3> secondVector;
 
     for (size_t i = 0; i < points.size() - 1; ++i) {
@@ -147,10 +156,18 @@ vector<glm::vec3> Editor::calculateSecondVector(const std::vector<glm::vec3>& po
         float teta = std::atan(H/W);
 
         float alpha;
-        if (W > 0) {
-            alpha = teta + (90.0 * M_PI / 180.0);
+        if (isInternal) {
+            if (W < 0) {
+                alpha = teta + (90.0 * M_PI / 180.0);
+            } else {
+                alpha = teta - (90.0 * M_PI / 180.0);
+            }
         } else {
-            alpha = teta - (90.0 * M_PI / 180.0);
+            if (W > 0) {
+                alpha = teta + (90.0 * M_PI / 180.0);
+            } else {
+                alpha = teta - (90.0 * M_PI / 180.0);
+            }
         }
 
         float Cx = std::cos(alpha) * M + points[i].x;
@@ -205,6 +222,7 @@ void Editor::updateKeyboardInput() {
     if (glfwGetKey(this->window, GLFW_KEY_3) == GLFW_PRESS && !key3Pressed) {
         this->bSplineCurve.setControlPoints(this->guidePoints);
         this->bSplineCurve.generateCurve(10);
+        this->guidePoints.clear();
         key3Pressed = true;
     } else if (glfwGetKey(this->window, GLFW_KEY_3) == GLFW_RELEASE) {
         key3Pressed = false;
@@ -213,7 +231,7 @@ void Editor::updateKeyboardInput() {
     /// 4 - INTERNAL B-SPLINE CURVE
     if (glfwGetKey(this->window, GLFW_KEY_4) == GLFW_PRESS && !key4Pressed) {
         vector<glm::vec3> middleCurvePoints = this->bSplineCurve.getCurvePoints();
-        vector<glm::vec3> internalCurvePoints = this->calculateSecondVector(middleCurvePoints, 10);
+        vector<glm::vec3> internalCurvePoints = this->calculateSecondVector(middleCurvePoints, 10, true);
         this->internalBSplineCurve.generateCurveWithPoints(internalCurvePoints);
         key4Pressed = true;
     } else if (glfwGetKey(this->window, GLFW_KEY_4) == GLFW_RELEASE) {
@@ -260,14 +278,14 @@ void Editor::render() {
     this->renderCross();
 
     for (auto&point : this->guidePoints) {
-        point.drawPoint(this->shaders[0]);
+        point.drawPoint(this->shaders[BASE]);
     }
 
     // this->bezierCurve.drawCurve(this->shaders[0], glm::vec4(0, 1, 0, 1));
-    this->bSplineCurve.drawCurve(this->shaders[0], glm::vec4(0, 1, 0, 1));
-    this->internalBSplineCurve.drawCurve(this->shaders[0], glm::vec4(0, 1, 0, 1));
+    this->bSplineCurve.drawCurve(this->shaders[BASE_B_SPLINE], glm::vec4(0, 1, 0, 1));
+    this->internalBSplineCurve.drawCurve(this->shaders[INTERNAL_B_SPLINE], glm::vec4(0, 1, 0, 1));
 
-    this->lineDrawer.drawLines(this->shaders[0], this->guidePoints);
+    this->lineDrawer.drawLines(this->shaders[BASE], this->guidePoints);
 
     glfwSwapBuffers(window);
 }
