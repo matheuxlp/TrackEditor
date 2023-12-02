@@ -7,10 +7,8 @@
 
 #include "Curve.hpp"
 
-void Curve::drawCurve(Shader* shader, glm::vec4 color) {
-    glm::fvec4 colorVec4(color.r, color.g, color.b, color.a);
+void Curve::drawCurve(Shader* shader) {
     shader->use();
-    //shader->setVec4f(colorVec4, "finalColor");
 
     glBindVertexArray(VAO);
     glDrawArrays(GL_LINE_LOOP, 0, curvePoints.size());

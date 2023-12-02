@@ -248,6 +248,19 @@ void Editor::updateKeyboardInput() {
         key5Pressed = false;
     }
 
+    /// 9 - Generate OBJ
+    if (glfwGetKey(this->window, GLFW_KEY_8) == GLFW_PRESS && !key8Pressed) {
+        std::cout << "Generta\n";
+        vector<glm::vec3> externalCurvePoints = this->externalBSplineCurve.getCurvePoints();
+        vector<glm::vec3> internalCurvePoints = this->internalBSplineCurve.getCurvePoints();
+        // Change the path name
+        string pathName = "/Users/matheuxlp/Documents/College/2023-2/ComputacaoGrafica/GB/TrabalhoGB/Editor/TrackEditor/TrackEditor/resources/output/output.obj";
+        this->writeObjFile(externalCurvePoints, internalCurvePoints, pathName);
+        key8Pressed = true;
+    } else if (glfwGetKey(this->window, GLFW_KEY_8) == GLFW_RELEASE) {
+        key8Pressed = false;
+    }
+
     /// 9 - CLEAR GUIDE POINTS
     if (glfwGetKey(this->window, GLFW_KEY_9) == GLFW_PRESS && !key9Pressed) {
         std::cout << "Clear guide points and line\n";
@@ -292,9 +305,9 @@ void Editor::render() {
     }
 
     // this->bezierCurve.drawCurve(this->shaders[0], glm::vec4(0, 1, 0, 1));
-    this->bSplineCurve.drawCurve(this->shaders[BASE_B_SPLINE], glm::vec4(0, 1, 0, 1));
-    this->internalBSplineCurve.drawCurve(this->shaders[INTERNAL_B_SPLINE], glm::vec4(0, 1, 0, 1));
-    this->externalBSplineCurve.drawCurve(this->shaders[EXTERNAL_B_SPLINE], glm::vec4(0, 1, 0, 1));
+    this->bSplineCurve.drawCurve(this->shaders[BASE_B_SPLINE]);
+    this->internalBSplineCurve.drawCurve(this->shaders[INTERNAL_B_SPLINE]);
+    this->externalBSplineCurve.drawCurve(this->shaders[EXTERNAL_B_SPLINE]);
 
     this->lineDrawer.drawLines(this->shaders[BASE], this->guidePoints);
 
@@ -314,4 +327,74 @@ void Editor::renderCross() {
     glBindVertexArray(crossVAO);
     glDrawArrays(GL_LINES, 0, 4);
     glBindVertexArray(0);
+}
+
+void Editor::writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>& externalVertices, const string& filename) {
+    if (internalVertices.empty() || externalVertices.empty()) {
+        std::cout << "Vector is empty." << std::endl;
+        return;
+    } else {
+        ofstream objFile(filename);
+
+        if (!objFile.is_open()) {
+            std::cerr << "Error opening file: " << filename << std::endl;
+            return;
+        }
+
+        objFile << "# Atividade GB - Computacao Grafica\n";
+        objFile << "# Alunos: Matheus Polonia e Pamela Santos\n";
+        objFile << "o Track\n";
+
+        int N = externalVertices.size();
+
+
+        // Write internal vertices
+        for (size_t i = 0; i < internalVertices.size(); ++i) {
+            objFile << "v " << internalVertices[i].x << " " << internalVertices[i].y << " " << internalVertices[i].z << "\n";
+        }
+
+        // Write external vertices
+        for (size_t i = 0; i < externalVertices.size(); ++i) {
+            objFile << "v " << externalVertices[i].x << " " << externalVertices[i].y << " " << externalVertices[i].z << "\n";
+        }
+
+        // Write texture
+        objFile << "vt " << 0.0 << " " << 0.0 << "\n";
+        objFile << "vt " << 1.0 << " " << 0.0 << "\n";
+        objFile << "vt " << 1.0 << " " << 1.0 << "\n";
+        objFile << "vt " << 0.0 << " " << 1.0 << "\n";
+
+
+        // Write normal;
+        vector<glm::vec3> vn1;
+        vector<glm::vec3> vn2;
+        for (size_t i = 0; i <= N; ++i) {
+            glm::vec3 A = externalVertices[i];
+            glm::vec3 B = externalVertices[i+1];
+            glm::vec3 C = internalVertices[i];
+            glm::vec3 D = internalVertices[i+1];
+            vn1.push_back(glm::cross(A - B, A - C));
+            vn2.push_back(glm::cross(B - C, B - D));
+        }
+        for (size_t i = 0; i < vn1.size(); ++i) {
+            objFile << "vn " << vn1[i].x << " " << vn1[i].y << " " << vn1[i].z << "\n";
+        }
+        for (size_t i = 0; i < vn2.size(); ++i) {
+            objFile << "vn " << vn2[i].x << " " << vn2[i].y << " " << vn2[i].z << "\n";
+        }
+
+        // Write faces
+        for (size_t i = 0; i <= N; ++i) {
+            objFile << "f " << i << "/1/1 " << i + 1 << "/2/1 " << i + N << "/4/1\n";
+            objFile << "f " << i + N << "/4/1 " << i+1 << "/2/1 " << i + 1 + N << "/3/1\n";
+        }
+
+        if (objFile.fail()) {
+            std::cerr << "Error writing to file: " << filename << std::endl;
+        } else {
+            std::cout << "File written successfully: " << filename << std::endl;
+        }
+
+        objFile.close();
+    }
 }

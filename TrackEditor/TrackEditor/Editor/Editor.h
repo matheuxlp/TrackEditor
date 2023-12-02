@@ -59,6 +59,7 @@ private:
     bool key3Pressed;
     bool key4Pressed;
     bool key5Pressed;
+    bool key8Pressed;
     bool key9Pressed;
     bool key0Pressed;
 
@@ -81,6 +82,7 @@ private:
     void initCross();
     void renderCross();
     vector<glm::vec3> calculateSecondVector(const std::vector<glm::vec3>& points, float M, bool isInternal);
+    void writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>& externalVertices, const string& filename);
 
 public:
     Editor();

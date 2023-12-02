@@ -59,7 +59,7 @@ public:
     }
 
     void generateCurve(int pointsPerSegment);
-    void drawCurve(Shader* shader, glm::vec4 color);
+    void drawCurve(Shader* shader);
 
     int getNbCurvePoints() {
         return static_cast<int>(curvePoints.size());
