@@ -1,20 +1,14 @@
-//
-//  Point.h
-//  TrackEditor
-//
-//  Created by Matheus Polonia on 24/11/23.
-//
-
 #ifndef Point_h
 #define Point_h
 
 #include <glm.hpp>
 #include <vec2.hpp>
-#include "Shader.h" // Include your Shader class definition
+#include "Shader.h"
 
 class Point {
 private:
     glm::vec3 position;
+    GLuint VAO;
 
 public:
     Point(float x, float y, float z) {
@@ -43,13 +37,12 @@ public:
         program.setVec3f(this->position, "position");
     }
 
-    void drawPoint(Shader* program) const {
-        glUseProgram(program->getID());
-        // glUniform3f(glGetUniformLocation(program.getID(), "pointColor"), 1.0f, 0.0f, 0.0f); // Assuming red color for the point
+    void drawPoint(Shader* shader) {
+        shader->use();
+        
+        glBindVertexArray(0);
 
-        glBindVertexArray(0); // Unbind any existing VAO
-
-        GLuint VBO, VAO;
+        GLuint VBO;
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
 
@@ -58,17 +51,14 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3), &(this->position), GL_STATIC_DRAW);
 
-        // Position attribute
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
         glBindVertexArray(0);
 
-        // Draw the point
         glBindVertexArray(VAO);
         glDrawArrays(GL_POINTS, 0, 1);
 
-        // Clean up
         glDeleteVertexArrays(1, &VAO);
         glDeleteBuffers(1, &VBO);
 

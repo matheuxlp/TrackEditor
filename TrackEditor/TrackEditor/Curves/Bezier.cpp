@@ -1,10 +1,3 @@
-//
-//  Bezier.cpp
-//  TrackEditor
-//
-//  Created by Matheus Polonia on 22/11/23.
-//
-
 #include "Bezier.hpp"
 
 Bezier::Bezier() {}
@@ -12,10 +5,10 @@ Bezier::Bezier() {}
 void Bezier::generateCurve(int pointsPerSegment) {
     float step = 1.0 / static_cast<float>(pointsPerSegment);
 
-    int nControlPoints = controlPoints.size();
+    int nControlPoints = (int)controlPoints.size();
 
     if (nControlPoints < 4) {
-        std::cerr << "Minus then 4 points" << std::endl;
+        std::cerr << "Less then 4 points" << std::endl;
         return;
     }
 
@@ -47,7 +40,6 @@ void Bezier::generateCurve(int pointsPerSegment) {
         }
     }
 
-    //Gera o VAO
     GLuint VBO;
 
     glGenBuffers(1, &VBO);

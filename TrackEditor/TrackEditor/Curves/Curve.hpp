@@ -1,14 +1,6 @@
-//
-//  Curve.hpp
-//  TrackEditor
-//
-//  Created by Matheus Polonia on 22/11/23.
-//
-
 #ifndef Curve_hpp
 #define Curve_hpp
 
-//GLM
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
@@ -19,7 +11,6 @@
 #include "Point.h"
 
 #include <OpenGL/OpenGL.h>
-
 
 using namespace std;
 

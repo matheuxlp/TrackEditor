@@ -1,10 +1,3 @@
-//
-//  BSpline.cpp
-//  TrackEditor
-//
-//  Created by Matheus Polonia on 29/11/23.
-//
-
 #include "BSpline.hpp"
 
 BSpline::BSpline() {}
@@ -12,7 +5,7 @@ BSpline::BSpline() {}
 void BSpline::generateCurve(int pointsPerSegment) {
     float inc = 1.0 / static_cast<float>(pointsPerSegment);
 
-    int N = controlPoints.size();
+    int N = (int)controlPoints.size();
 
     for (int i = 0; i < N; i++) {
         for (float t = 0.0; t <= 1.0; t += inc) {
@@ -34,8 +27,6 @@ void BSpline::generateCurve(int pointsPerSegment) {
             curvePoints.push_back(glm::vec3(x, y, z));
         }
     }
-
-    //Gera o VAO
     GLuint VBO;
 
     glGenBuffers(1, &VBO);
@@ -67,10 +58,8 @@ void BSpline::generateCurveWithPoints(vector<glm::vec3> curvePoints) {
         std::cout << "Vector is empty." << std::endl;
         return;
     } else {
-        std::cout << "Here" << std::endl;
         this->curvePoints = curvePoints;
 
-        //Gera o VAO
         GLuint VBO;
 
         glGenBuffers(1, &VBO);

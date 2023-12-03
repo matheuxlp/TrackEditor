@@ -1,10 +1,3 @@
-//
-//  Shader.h
-//  TrackEditor
-//
-//  Created by Matheus Polonia on 20/11/23.
-//
-
 #ifndef Shader_h
 #define Shader_h
 
@@ -34,7 +27,6 @@ class Shader {
 private:
     GLuint id;
 
-    //Private functions
     std::string loadShaderSource(const char* fileName) {
         std::string temp = "";
         std::string src = "";
@@ -105,8 +97,6 @@ private:
     }
 
 public:
-
-    //Constructors/Destructors
     Shader(const char* vertexFile, const char* fragmentFile) {
         GLuint vertexShader = 0;
         GLuint fragmentShader = 0;
@@ -126,7 +116,6 @@ public:
         glDeleteProgram(this->id);
     }
 
-    //Set uniform functions
     void use() {
         glUseProgram(this->id);
     }

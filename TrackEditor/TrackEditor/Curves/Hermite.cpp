@@ -1,10 +1,3 @@
-//
-//  Hermite.cpp
-//  TrackEditor
-//
-//  Created by Matheus Polonia on 22/11/23.
-//
-
 #include "Hermite.hpp"
 
 Hermite::Hermite() {}
@@ -43,7 +36,6 @@ void Hermite::generateCurve(int pointsPerSegment) {
         curvePoints.push_back(glm::vec3(x, y, z));
     }
 
-    // OpenGL Setup
     GLuint VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
