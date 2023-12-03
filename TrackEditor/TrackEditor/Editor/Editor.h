@@ -61,8 +61,8 @@ private:
     bool key3Pressed;
     bool key4Pressed;
     bool key5Pressed;
+    bool key6Pressed;
     bool key7Pressed;
-    bool key8Pressed;
     bool key9Pressed;
     bool key0Pressed;
 

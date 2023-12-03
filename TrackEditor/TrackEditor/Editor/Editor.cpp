@@ -73,11 +73,9 @@ void Editor::initShaders() {
 }
 
 void Editor::updateProjectionMatrix() {
-    // Calculate the orthographic projection matrix with inverted Y
     this->projectionMatrix = glm::ortho(0.0f, static_cast<float>(this->WINDOW_WIDTH),
                                       static_cast<float>(this->WINDOW_HEIGHT), 0.0f, -1.0f, 1.0f);
 
-    // Pass the projection matrix to the shader
     for (auto& shader : this->shaders) {
         shader->use();
         shader->setMat4fv(projectionMatrix, "projection");
@@ -86,13 +84,11 @@ void Editor::updateProjectionMatrix() {
 
 void Editor::initCross() {
     GLfloat crossVertices[] = {
-        // Horizontal line
-        0, (float)WINDOW_HEIGHT / 2, 0.0f,   // Endpoint 1
-        (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT / 2, 0.0f,    // Endpoint 2
+        0, (float)WINDOW_HEIGHT / 2, 0.0f,
+        (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT / 2, 0.0f,
 
-        // Vertical line
-        (float)WINDOW_WIDTH / 2, 0, 0.0f,   // Endpoint 1
-        (float)WINDOW_WIDTH / 2, (float)WINDOW_HEIGHT, 0.0f     // Endpoint 2
+        (float)WINDOW_WIDTH / 2, 0, 0.0f,
+        (float)WINDOW_WIDTH / 2, (float)WINDOW_HEIGHT, 0.0f
     };
 
     glGenVertexArrays(1, &crossVAO);
@@ -103,7 +99,6 @@ void Editor::initCross() {
     glBindBuffer(GL_ARRAY_BUFFER, crossVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(crossVertices), crossVertices, GL_STATIC_DRAW);
 
-    // Position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
 
@@ -112,8 +107,6 @@ void Editor::initCross() {
     glBindVertexArray(0);
 }
 
-
-//Constructors / Destructors
 Editor::Editor() {
     this->window = nullptr;
     this->WINDOW_WIDTH = 600;
@@ -137,16 +130,17 @@ Editor::~Editor() {
     glfwTerminate();
 }
 
-//Accessor
 int Editor::getWindowShouldClose() {
     return glfwWindowShouldClose(this->window);
 }
 
-//Modifier
 void Editor::setWindowShouldClose() {
     glfwSetWindowShouldClose(this->window, GLFW_TRUE);
 }
 
+/// MARK: Vector Calculations
+
+/// Calculate the position of the internal and external curves based on the base B-Spline curve
 vector<glm::vec3> Editor::calculateSecondVector(const std::vector<glm::vec3>& points, float M, bool isInternal) {
     std::vector<glm::vec3> secondVector;
 
@@ -180,6 +174,154 @@ vector<glm::vec3> Editor::calculateSecondVector(const std::vector<glm::vec3>& po
     return secondVector;
 }
 
+/// Invester the Y and Z coordinates of the vector to make the curve be shown in the horizontal plane
+vector<glm::vec3> Editor::invertVector(const vector<glm::vec3>& points) {
+    vector<glm::vec3> newVector;
+
+    for (auto&point : points) {
+        newVector.push_back(glm::vec3(point.x, point.z, point.y));
+    }
+
+    return newVector;
+}
+
+/// Gets the position of the points with the orthogonal value of the screen
+vector<glm::vec3> Editor::getShaderPosition(const vector<glm::vec3>& vertices) {
+    vector<glm::vec3> newVertices;
+
+    for (auto&point : vertices) {
+        glm::vec4 orthPoint = this->projectionMatrix * glm::vec4(point, 1);
+        newVertices.push_back(glm::vec3(orthPoint.x, orthPoint.y, orthPoint.z));
+    }
+
+    return newVertices;
+}
+
+/// Get prepare the vectors of vertices from the curves to use in the writes
+vector<glm::vec3> Editor::getOBJVertices(const vector<glm::vec3>& vertices) {
+    vector<glm::vec3> newVertices;
+
+    newVertices = this->getShaderPosition(vertices);
+    newVertices = this->invertVector(newVertices);
+
+    return newVertices;
+}
+
+/// Render the cross in the middle of the screen
+void Editor::renderCross() {
+    this->updateProjectionMatrix();
+
+    glUseProgram(shaders[0]->getID());
+
+    glBindVertexArray(crossVAO);
+    glDrawArrays(GL_LINES, 0, 4);
+    glBindVertexArray(0);
+}
+
+/// MARK: File Writers
+/// Create the output.obj file
+void Editor::writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>& externalVertices, const string& filename, float scale) {
+    if (internalVertices.empty() || externalVertices.empty()) {
+        std::cout << "Vector is empty." << std::endl;
+        return;
+    } else {
+        ofstream objFile(filename);
+
+        if (!objFile.is_open()) {
+            std::cerr << "Error opening file: " << filename << std::endl;
+            return;
+        }
+
+        objFile << "# Atividade GB - Computacao Grafica\n";
+        objFile << "# Alunos: Matheus Polonia e Pamela Santos\n";
+        objFile << "mtllib track.mtl\n";
+        objFile << "o Track\n";
+
+        int N = (int)externalVertices.size();
+
+        // Write internal vertices with scaling
+        for (size_t i = 0; i < internalVertices.size(); ++i) {
+            glm::vec3 scaledVertex = internalVertices[i] * scale;
+            objFile << "v " << scaledVertex.x << " " << scaledVertex.y << " " << scaledVertex.z * -1<< "\n";
+        }
+
+        // Write external vertices with scaling
+        for (size_t i = 0; i < externalVertices.size(); ++i) {
+            glm::vec3 scaledVertex = externalVertices[i] * scale;
+            objFile << "v " << scaledVertex.x << " " << scaledVertex.y << " " << scaledVertex.z * -1<< "\n";
+        }
+
+        // Write texture
+        objFile << "vt " << 0.0 << " " << 0.0 << "\n";
+        objFile << "vt " << 1.0 << " " << 0.0 << "\n";
+        objFile << "vt " << 1.0 << " " << 1.0 << "\n";
+        objFile << "vt " << 0.0 << " " << 1.0 << "\n";
+
+
+        // Write normal;
+        vector<glm::vec3> vn1;
+        vector<glm::vec3> vn2;
+        for (size_t i = 0; i <= N; ++i) {
+            glm::vec3 A = externalVertices[i];
+            glm::vec3 B = externalVertices[i+1];
+            glm::vec3 C = internalVertices[i];
+            glm::vec3 D = internalVertices[i+1];
+            vn1.push_back(glm::cross(A - B, A - C));
+            vn2.push_back(glm::cross(B - C, B - D));
+        }
+        for (size_t i = 0; i < vn1.size(); ++i) {
+            objFile << "vn " << vn1[i].x << " " << vn1[i].y << " " << vn1[i].z << "\n";
+        }
+        for (size_t i = 0; i < vn2.size(); ++i) {
+            objFile << "vn " << vn2[i].x << " " << vn2[i].y << " " << vn2[i].z << "\n";
+        }
+
+        objFile << "g Track_Material\n";
+        objFile << "usemtl Material\n";
+
+        // Write faces
+        for (size_t i = 0; i <= N; ++i) {
+            if (i == N) {
+                objFile << "f " << i << "/1/1 " << i + 1 << "/2/1 " << i + N << "/4/1\n";
+            } else {
+                objFile << "f " << i << "/1/1 " << i + 1 << "/2/1 " << i + N << "/4/1\n";
+                objFile << "f " << i + N << "/4/1 " << i + 1 << "/2/1 " << i + 1 + N << "/3/1\n";
+            }
+        }
+
+        if (objFile.fail()) {
+            std::cerr << "Error writing to file: " << filename << std::endl;
+        } else {
+            std::cout << "File written successfully: " << filename << std::endl;
+        }
+
+        objFile.close();
+    }
+}
+
+
+/// Create the animaiton.txt file
+void Editor::writeAnimationFile(const std::vector<glm::vec3>& vectorToWrite, const std::string& filename, float scale) {
+    std::ofstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    for (const auto& vertex : vectorToWrite) {
+        glm::vec3 scaledVertex = vertex * scale;
+        file << scaledVertex.x << " " << scaledVertex.y << " " << scaledVertex.z * -1.f<< "\n";
+    }
+
+    file.close();
+
+    std::cout << "Vector written to file: " << filename << std::endl;
+}
+
+/// MARK: Updates
+
+/// Update Mouse
 void Editor::updateMouseInput() {
     glfwGetCursorPos(this->window, &this->mouseX, &this->mouseY);
 
@@ -199,6 +341,7 @@ void Editor::updateMouseInput() {
     }
 }
 
+/// Update Keyboard
 void Editor::updateKeyboardInput() {
     if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(this->window, GLFW_TRUE);
@@ -250,53 +393,48 @@ void Editor::updateKeyboardInput() {
         key5Pressed = false;
     }
 
-    /// 7 - Generate OBJ
+    /// 6 - CLEAR GUIDE POINTS
+    if (glfwGetKey(this->window, GLFW_KEY_6) == GLFW_PRESS && !key6Pressed) {
+        this->guidePoints.clear();
+        key6Pressed = true;
+    } else if (glfwGetKey(this->window, GLFW_KEY_6) == GLFW_RELEASE) {
+        key6Pressed = false;
+    }
+
+    /// 7 - CLEAR CURVES
     if (glfwGetKey(this->window, GLFW_KEY_7) == GLFW_PRESS && !key7Pressed) {
-        std::cout << "Write Animation Path" << "\n";
-        vector<glm::vec3> animationPath = this->getOBJVertices(this->bSplineCurve.getCurvePoints());
-        // Change the path name
-        string pathName = "/Users/matheuxlp/Documents/College/2023-2/ComputacaoGrafica/GB/TrabalhoGB/Editor/TrackEditor/TrackEditor/resources/output/animation.txt";
-        this->writeAnimationFile(animationPath, pathName, 10);
+        this->bezierCurve.clear();
+        this->hermiteCurve.clear();
+        this->bSplineCurve.clear();
         key7Pressed = true;
     } else if (glfwGetKey(this->window, GLFW_KEY_7) == GLFW_RELEASE) {
         key7Pressed = false;
     }
 
-    /// 8 - Generate OBJ
-    if (glfwGetKey(this->window, GLFW_KEY_8) == GLFW_PRESS && !key8Pressed) {
-        std::cout << "Generta\n";
-        vector<glm::vec3> externalCurvePoints = this->getOBJVertices(this->externalBSplineCurve.getCurvePoints());
-        vector<glm::vec3> internalCurvePoints = this->getOBJVertices(this->internalBSplineCurve.getCurvePoints());
-        // Change the path name
-        string pathName = "/Users/matheuxlp/Documents/College/2023-2/ComputacaoGrafica/GB/TrabalhoGB/Editor/TrackEditor/TrackEditor/resources/output/output.obj";
-        this->writeObjFile(externalCurvePoints, internalCurvePoints, pathName, 10);
-        key8Pressed = true;
-    } else if (glfwGetKey(this->window, GLFW_KEY_8) == GLFW_RELEASE) {
-        key8Pressed = false;
-    }
-
-    /// 9 - CLEAR GUIDE POINTS
+    /// 9 - Generate OBJ
     if (glfwGetKey(this->window, GLFW_KEY_9) == GLFW_PRESS && !key9Pressed) {
-        std::cout << "Clear guide points and line\n";
-        this->guidePoints.clear();
+        vector<glm::vec3> animationPath = this->getOBJVertices(this->bSplineCurve.getCurvePoints());
+        // Change the path name
+        string pathName = "/Users/matheuxlp/Documents/College/2023-2/ComputacaoGrafica/GB/TrabalhoGB/Editor/TrackEditor/TrackEditor/resources/output/animation.txt";
+        this->writeAnimationFile(animationPath, pathName, 10);
         key9Pressed = true;
     } else if (glfwGetKey(this->window, GLFW_KEY_9) == GLFW_RELEASE) {
         key9Pressed = false;
     }
 
-    /// 0 - CLEAR CURVES
+    /// 0 - Generate OBJ
     if (glfwGetKey(this->window, GLFW_KEY_0) == GLFW_PRESS && !key0Pressed) {
-        std::cout << "Clear Curves\n";
-        this->bezierCurve.clear();
-        this->hermiteCurve.clear();
-        this->bSplineCurve.clear();
+        vector<glm::vec3> externalCurvePoints = this->getOBJVertices(this->externalBSplineCurve.getCurvePoints());
+        vector<glm::vec3> internalCurvePoints = this->getOBJVertices(this->internalBSplineCurve.getCurvePoints());
+        // Change the path name
+        string pathName = "/Users/matheuxlp/Documents/College/2023-2/ComputacaoGrafica/GB/TrabalhoGB/Editor/TrackEditor/TrackEditor/resources/output/output.obj";
+        this->writeObjFile(externalCurvePoints, internalCurvePoints, pathName, 10);
         key0Pressed = true;
     } else if (glfwGetKey(this->window, GLFW_KEY_0) == GLFW_RELEASE) {
         key0Pressed = false;
     }
 }
-
-
+/// Update function
 void Editor::update() {
     glfwPollEvents();
 
@@ -304,6 +442,7 @@ void Editor::update() {
     this->updateMouseInput();
 }
 
+/// MARK: Render Function
 void Editor::render() {
     this->updateProjectionMatrix();
 
@@ -318,7 +457,6 @@ void Editor::render() {
         point.drawPoint(this->shaders[BASE]);
     }
 
-    // this->bezierCurve.drawCurve(this->shaders[0], glm::vec4(0, 1, 0, 1));
     this->bSplineCurve.drawCurve(this->shaders[BASE_B_SPLINE]);
     this->internalBSplineCurve.drawCurve(this->shaders[INTERNAL_B_SPLINE]);
     this->externalBSplineCurve.drawCurve(this->shaders[EXTERNAL_B_SPLINE]);
@@ -328,147 +466,7 @@ void Editor::render() {
     glfwSwapBuffers(window);
 }
 
-//Static functions
+/// MARK: Static Functions
 void Editor::framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH) {
     glViewport(0, 0, fbW, fbH);
 };
-
-void Editor::renderCross() {
-    this->updateProjectionMatrix();
-
-    glUseProgram(shaders[0]->getID());
-
-    glBindVertexArray(crossVAO);
-    glDrawArrays(GL_LINES, 0, 4);
-    glBindVertexArray(0);
-}
-
-void Editor::writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>& externalVertices, const string& filename, float scale) {
-    if (internalVertices.empty() || externalVertices.empty()) {
-        std::cout << "Vector is empty." << std::endl;
-        return;
-    } else {
-        ofstream objFile(filename);
-
-        if (!objFile.is_open()) {
-            std::cerr << "Error opening file: " << filename << std::endl;
-            return;
-        }
-
-        objFile << "# Atividade GB - Computacao Grafica\n";
-        objFile << "# Alunos: Matheus Polonia e Pamela Santos\n";
-        objFile << "mtllib track.mtl\n";
-        objFile << "o Track\n";
-
-        int N = externalVertices.size();
-
-
-        // Write internal vertices with scaling
-        for (size_t i = 0; i < internalVertices.size(); ++i) {
-            glm::vec3 scaledVertex = internalVertices[i] * scale;
-            objFile << "v " << scaledVertex.x << " " << scaledVertex.y << " " << scaledVertex.z * -1<< "\n";
-        }
-
-        // Write external vertices with scaling
-        for (size_t i = 0; i < externalVertices.size(); ++i) {
-            glm::vec3 scaledVertex = externalVertices[i] * scale;
-            objFile << "v " << scaledVertex.x << " " << scaledVertex.y << " " << scaledVertex.z * -1<< "\n";
-        }
-
-        // Write texture
-        objFile << "vt " << 0.0 << " " << 0.0 << "\n";
-        objFile << "vt " << 1.0 << " " << 0.0 << "\n";
-        objFile << "vt " << 1.0 << " " << 1.0 << "\n";
-        objFile << "vt " << 0.0 << " " << 1.0 << "\n";
-
-
-        // Write normal;
-        vector<glm::vec3> vn1;
-        vector<glm::vec3> vn2;
-        for (size_t i = 0; i <= N; ++i) {
-            glm::vec3 A = externalVertices[i];
-            glm::vec3 B = externalVertices[i+1];
-            glm::vec3 C = internalVertices[i];
-            glm::vec3 D = internalVertices[i+1];
-            vn1.push_back(glm::cross(A - B, A - C));
-            vn2.push_back(glm::cross(B - C, B - D));
-        }
-        for (size_t i = 0; i < vn1.size(); ++i) {
-            objFile << "vn " << vn1[i].x << " " << vn1[i].y << " " << vn1[i].z << "\n";
-        }
-        for (size_t i = 0; i < vn2.size(); ++i) {
-            objFile << "vn " << vn2[i].x << " " << vn2[i].y << " " << vn2[i].z << "\n";
-        }
-
-        objFile << "g Track_Material\n";
-        objFile << "usemtl Material\n";
-        objFile << "s off\n";
-
-
-        // Write faces
-        for (size_t i = 0; i <= N; ++i) {
-            if (i == N) {
-                objFile << "f " << i << "/1/1 " << i + 1 << "/2/1 " << i + N << "/4/1\n";
-            } else {
-                objFile << "f " << i << "/1/1 " << i + 1 << "/2/1 " << i + N << "/4/1\n";
-                objFile << "f " << i + N << "/4/1 " << i + 1 << "/2/1 " << i + 1 + N << "/3/1\n";
-            }
-        }
-
-        if (objFile.fail()) {
-            std::cerr << "Error writing to file: " << filename << std::endl;
-        } else {
-            std::cout << "File written successfully: " << filename << std::endl;
-        }
-
-        objFile.close();
-    }
-}
-
-vector<glm::vec3> Editor::invertVector(const vector<glm::vec3>& points) {
-    vector<glm::vec3> newVector;
-
-    for (auto&point : points) {
-        newVector.push_back(glm::vec3(point.x, point.z, point.y));
-    }
-
-    return newVector;
-}
-
-vector<glm::vec3> Editor::getShaderPosition(const vector<glm::vec3>& vertices) {
-    vector<glm::vec3> newVertices;
-
-    for (auto&point : vertices) {
-        glm::vec4 orthPoint = this->projectionMatrix * glm::vec4(point, 1);
-        newVertices.push_back(glm::vec3(orthPoint.x, orthPoint.y, orthPoint.z));
-    }
-
-    return newVertices;
-}
-
-vector<glm::vec3> Editor::getOBJVertices(const vector<glm::vec3>& vertices) {
-    vector<glm::vec3> newVertices;
-
-    newVertices = this->getShaderPosition(vertices);
-    newVertices = this->invertVector(newVertices);
-
-    return newVertices;
-}
-
-void Editor::writeAnimationFile(const std::vector<glm::vec3>& vectorToWrite, const std::string& filename, float scale) {
-    std::ofstream file(filename);
-
-    if (!file.is_open()) {
-        std::cerr << "Error opening file: " << filename << std::endl;
-        return;
-    }
-
-    for (const auto& vertex : vectorToWrite) {
-        glm::vec3 scaledVertex = vertex * scale;
-        file << scaledVertex.x << " " << scaledVertex.y << " " << scaledVertex.z * -1.f<< "\n";
-    }
-
-    file.close();
-
-    std::cout << "Vector written to file: " << filename << std::endl;
-}
