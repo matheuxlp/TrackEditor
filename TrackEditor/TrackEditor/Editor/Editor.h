@@ -22,92 +22,94 @@
 #include <OpenGL/OpenGL.h>
 
 #include "Shader.h"
+#include "Point.h"
+#include "Hermite.hpp"
 #include "Curve.hpp"
 #include "Bezier.hpp"
-#include "Hermite.hpp"
 #include "BSpline.hpp"
-#include "Point.h"
+
 #include "LineDrawer.h"
 
 
 class Editor {
 private:
-//Variables
-    //Window
+    /// MARK: Window Varaibles
     GLFWwindow* window;
     int WINDOW_WIDTH;
     int WINDOW_HEIGHT;
     int framebufferWidth;
     int framebufferHeight;
 
-    double mouseX;
-    double mouseY;
-    
-    // Track
+    /// MARK: Shader and Visual Variables
     glm::mat4 projectionMatrix;
-
     std::vector<Shader*> shaders;
 
-    // Guide
+    /// MARK: Visual Guide Variables
     GLuint crossVAO, crossVBO;
-    LineDrawer lineDrawer;
     std::vector<Point> guidePoints;
+    LineDrawer lineDrawer;
 
-    // Keyboard and mouse Update
+    /// MARK: Mouse Varaibles
+    double mouseX;
+    double mouseY;
     bool leftMouseButtonPressed;
 
-    bool key1Pressed;
-    bool key2Pressed;
-    bool key3Pressed;
-    bool key4Pressed;
-    bool key5Pressed;
-    bool key6Pressed;
-    bool key7Pressed;
-    bool key9Pressed;
-    bool key0Pressed;
+    /// MARK: Mouse Varaibles
+    bool key1Pressed; // Hermit Curve
+    bool key2Pressed; // Bezier Curve
+    bool key3Pressed; // B-Spline Curve
+    bool key4Pressed; // External B-Spline Curve
+    bool key5Pressed; // Internal B-Spline Curve
+    bool key6Pressed; // Clean
+    bool key7Pressed; // Clean
+    bool key9Pressed; // Generate OBJ
+    bool key0Pressed; // Generate Animation
 
-    // Curves
+    /// MARK: Curve Variables
     Hermite hermiteCurve;
     Bezier bezierCurve;
     BSpline bSplineCurve;
     BSpline internalBSplineCurve;
     BSpline externalBSplineCurve;
 
-
-    // ----- //
-
+    /// MARK: Init Function
     void initGLFW();
     void initWindow();
     void initGLEW();
     void initOpenGLOptions();
     void initShaders();
-    void updateProjectionMatrix();
     void initCross();
-    void renderCross();
+
+    /// MARK: Calculation and Vector Function
     vector<glm::vec3> calculateSecondVector(const std::vector<glm::vec3>& points, float M, bool isInternal);
-    void writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>& externalVertices, const string& filename, float scale);
     vector<glm::vec3> invertVector(const vector<glm::vec3>& points);
     vector<glm::vec3> getShaderPosition(const vector<glm::vec3>& vertices);
     vector<glm::vec3> getOBJVertices(const vector<glm::vec3>& vertices);
+
+    ///  MARK: Object Writing Functions
+    void writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>& externalVertices, const string& filename, float scale);
     void writeAnimationFile(const std::vector<glm::vec3>& vectorToWrite, const std::string& filename, float scale);
 
 public:
     Editor();
     virtual ~Editor();
-
     int getWindowShouldClose();
-
     void setWindowShouldClose();
 
+    /// MARK: Update Function
+    void updateProjectionMatrix();
     void updateMouseInput();
     void updateKeyboardInput();
     void update();
-    void render();
 
-//Static functions
+    /// MARK: Rendering Function
+    void render();
+    void renderCross();
+
     static void framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH);
 };
 
+/// Enum to diferenciate the shaders
 enum ShaderType {
     BASE = 0,
     BASE_B_SPLINE = 1,

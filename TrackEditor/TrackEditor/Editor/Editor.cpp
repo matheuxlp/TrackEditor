@@ -209,9 +209,7 @@ vector<glm::vec3> Editor::getOBJVertices(const vector<glm::vec3>& vertices) {
 
 /// Render the cross in the middle of the screen
 void Editor::renderCross() {
-    this->updateProjectionMatrix();
-
-    glUseProgram(shaders[0]->getID());
+    this->shaders[0]->use();
 
     glBindVertexArray(crossVAO);
     glDrawArrays(GL_LINES, 0, 4);
