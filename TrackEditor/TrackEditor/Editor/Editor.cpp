@@ -74,13 +74,13 @@ void Editor::initShaders() {
 
 void Editor::updateProjectionMatrix() {
     // Calculate the orthographic projection matrix with inverted Y
-    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->WINDOW_WIDTH),
+    this->projectionMatrix = glm::ortho(0.0f, static_cast<float>(this->WINDOW_WIDTH),
                                       static_cast<float>(this->WINDOW_HEIGHT), 0.0f, -1.0f, 1.0f);
 
     // Pass the projection matrix to the shader
     for (auto& shader : this->shaders) {
         shader->use();
-        shader->setMat4fv(projection, "projection");
+        shader->setMat4fv(projectionMatrix, "projection");
     }
 }
 
@@ -187,10 +187,12 @@ void Editor::updateMouseInput() {
 
     if (leftMouseButtonState == GLFW_PRESS && !leftMouseButtonPressed) {
 
-        // this->clickPoints.push_back(glm::vec3(lastMouseX, lastMouseY, 0.f));
-        // std::cout << "Position: (" << mouseX << ", " << mouseY << ")"<< "\n";
-        this->guidePoints.push_back(Point(mouseX, mouseY, 0.f));
+        Point clickPoint = Point(mouseX, mouseY, 0.f);
+        std::cout << "Position On Screen: (" << clickPoint.getPosition().x << ", " << clickPoint.getPosition().y << ")"<< "\n";
+        glm::vec4 orthPosition = this->projectionMatrix * glm::vec4(clickPoint.getPosition(), 1);
+        std::cout << "Position with orth: (" << orthPosition.x << ", " << orthPosition.y << ")"<< "\n";
 
+        this->guidePoints.push_back(clickPoint);
         leftMouseButtonPressed = true;
     } else if (leftMouseButtonState == GLFW_RELEASE) {
         leftMouseButtonPressed = false;
@@ -248,14 +250,26 @@ void Editor::updateKeyboardInput() {
         key5Pressed = false;
     }
 
-    /// 9 - Generate OBJ
+    /// 7 - Generate OBJ
+    if (glfwGetKey(this->window, GLFW_KEY_7) == GLFW_PRESS && !key7Pressed) {
+        std::cout << "Write Animation Path" << "\n";
+        vector<glm::vec3> animationPath = this->getOBJVertices(this->bSplineCurve.getCurvePoints());
+        // Change the path name
+        string pathName = "/Users/matheuxlp/Documents/College/2023-2/ComputacaoGrafica/GB/TrabalhoGB/Editor/TrackEditor/TrackEditor/resources/output/animation.txt";
+        this->writeAnimationFile(animationPath, pathName, 10);
+        key7Pressed = true;
+    } else if (glfwGetKey(this->window, GLFW_KEY_7) == GLFW_RELEASE) {
+        key7Pressed = false;
+    }
+
+    /// 8 - Generate OBJ
     if (glfwGetKey(this->window, GLFW_KEY_8) == GLFW_PRESS && !key8Pressed) {
         std::cout << "Generta\n";
-        vector<glm::vec3> externalCurvePoints = this->invertVector(this->externalBSplineCurve.getCurvePoints());
-        vector<glm::vec3> internalCurvePoints = this->invertVector(this->internalBSplineCurve.getCurvePoints());
+        vector<glm::vec3> externalCurvePoints = this->getOBJVertices(this->externalBSplineCurve.getCurvePoints());
+        vector<glm::vec3> internalCurvePoints = this->getOBJVertices(this->internalBSplineCurve.getCurvePoints());
         // Change the path name
         string pathName = "/Users/matheuxlp/Documents/College/2023-2/ComputacaoGrafica/GB/TrabalhoGB/Editor/TrackEditor/TrackEditor/resources/output/output.obj";
-        this->writeObjFile(externalCurvePoints, internalCurvePoints, pathName);
+        this->writeObjFile(externalCurvePoints, internalCurvePoints, pathName, 10);
         key8Pressed = true;
     } else if (glfwGetKey(this->window, GLFW_KEY_8) == GLFW_RELEASE) {
         key8Pressed = false;
@@ -329,7 +343,7 @@ void Editor::renderCross() {
     glBindVertexArray(0);
 }
 
-void Editor::writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>& externalVertices, const string& filename) {
+void Editor::writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>& externalVertices, const string& filename, float scale) {
     if (internalVertices.empty() || externalVertices.empty()) {
         std::cout << "Vector is empty." << std::endl;
         return;
@@ -343,19 +357,22 @@ void Editor::writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>
 
         objFile << "# Atividade GB - Computacao Grafica\n";
         objFile << "# Alunos: Matheus Polonia e Pamela Santos\n";
+        objFile << "mtllib track.mtl\n";
         objFile << "o Track\n";
 
         int N = externalVertices.size();
 
 
-        // Write internal vertices
+        // Write internal vertices with scaling
         for (size_t i = 0; i < internalVertices.size(); ++i) {
-            objFile << "v " << internalVertices[i].x << " " << internalVertices[i].y << " " << internalVertices[i].z << "\n";
+            glm::vec3 scaledVertex = internalVertices[i] * scale;
+            objFile << "v " << scaledVertex.x << " " << scaledVertex.y << " " << scaledVertex.z * -1<< "\n";
         }
 
-        // Write external vertices
+        // Write external vertices with scaling
         for (size_t i = 0; i < externalVertices.size(); ++i) {
-            objFile << "v " << externalVertices[i].x << " " << externalVertices[i].y << " " << externalVertices[i].z << "\n";
+            glm::vec3 scaledVertex = externalVertices[i] * scale;
+            objFile << "v " << scaledVertex.x << " " << scaledVertex.y << " " << scaledVertex.z * -1<< "\n";
         }
 
         // Write texture
@@ -383,10 +400,19 @@ void Editor::writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>
             objFile << "vn " << vn2[i].x << " " << vn2[i].y << " " << vn2[i].z << "\n";
         }
 
+        objFile << "g Track_Material\n";
+        objFile << "usemtl Material\n";
+        objFile << "s off\n";
+
+
         // Write faces
         for (size_t i = 0; i <= N; ++i) {
-            objFile << "f " << i << "/1/1 " << i + 1 << "/2/1 " << i + N << "/4/1\n";
-            objFile << "f " << i + N << "/4/1 " << i+1 << "/2/1 " << i + 1 + N << "/3/1\n";
+            if (i == N) {
+                objFile << "f " << i << "/1/1 " << i + 1 << "/2/1 " << i + N << "/4/1\n";
+            } else {
+                objFile << "f " << i << "/1/1 " << i + 1 << "/2/1 " << i + N << "/4/1\n";
+                objFile << "f " << i + N << "/4/1 " << i + 1 << "/2/1 " << i + 1 + N << "/3/1\n";
+            }
         }
 
         if (objFile.fail()) {
@@ -407,4 +433,42 @@ vector<glm::vec3> Editor::invertVector(const vector<glm::vec3>& points) {
     }
 
     return newVector;
+}
+
+vector<glm::vec3> Editor::getShaderPosition(const vector<glm::vec3>& vertices) {
+    vector<glm::vec3> newVertices;
+
+    for (auto&point : vertices) {
+        glm::vec4 orthPoint = this->projectionMatrix * glm::vec4(point, 1);
+        newVertices.push_back(glm::vec3(orthPoint.x, orthPoint.y, orthPoint.z));
+    }
+
+    return newVertices;
+}
+
+vector<glm::vec3> Editor::getOBJVertices(const vector<glm::vec3>& vertices) {
+    vector<glm::vec3> newVertices;
+
+    newVertices = this->getShaderPosition(vertices);
+    newVertices = this->invertVector(newVertices);
+
+    return newVertices;
+}
+
+void Editor::writeAnimationFile(const std::vector<glm::vec3>& vectorToWrite, const std::string& filename, float scale) {
+    std::ofstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    for (const auto& vertex : vectorToWrite) {
+        glm::vec3 scaledVertex = vertex * scale;
+        file << scaledVertex.x << " " << scaledVertex.y << " " << scaledVertex.z * -1.f<< "\n";
+    }
+
+    file.close();
+
+    std::cout << "Vector written to file: " << filename << std::endl;
 }

@@ -44,6 +44,8 @@ private:
     double mouseY;
     
     // Track
+    glm::mat4 projectionMatrix;
+
     std::vector<Shader*> shaders;
 
     // Guide
@@ -59,6 +61,7 @@ private:
     bool key3Pressed;
     bool key4Pressed;
     bool key5Pressed;
+    bool key7Pressed;
     bool key8Pressed;
     bool key9Pressed;
     bool key0Pressed;
@@ -82,8 +85,11 @@ private:
     void initCross();
     void renderCross();
     vector<glm::vec3> calculateSecondVector(const std::vector<glm::vec3>& points, float M, bool isInternal);
-    void writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>& externalVertices, const string& filename);
+    void writeObjFile(vector<glm::vec3>& internalVertices, vector<glm::vec3>& externalVertices, const string& filename, float scale);
     vector<glm::vec3> invertVector(const vector<glm::vec3>& points);
+    vector<glm::vec3> getShaderPosition(const vector<glm::vec3>& vertices);
+    vector<glm::vec3> getOBJVertices(const vector<glm::vec3>& vertices);
+    void writeAnimationFile(const std::vector<glm::vec3>& vectorToWrite, const std::string& filename, float scale);
 
 public:
     Editor();

@@ -1,0 +1,7 @@
+newmtl Material
+Ka 1.0 1.0 1.0  # Ambient color (white)
+Kd 0.8 0.8 0.8  # Diffuse color (light gray)
+Ks 0.0 0.0 0.0  # Specular color (black)
+Ns 0.0          # Shininess (0 for no specular highlights)
+
+illum 1          # Shading model (1 for flat shading)bl
